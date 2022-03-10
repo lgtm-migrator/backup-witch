@@ -57,23 +57,15 @@ class State:
 
 # region run utils
 
-def run_command(title: str, command: str, cwd: str, *, notify_on_error=True):
-    try:
-        subprocess.run(command,
-                       cwd=cwd,
-                       shell=True,
-                       check=True)
-    except subprocess.CalledProcessError as e:
-        if notify_on_error:
-            subprocess.run(
-                f'notify-send "backup_witch" "{title} failed!\nrepr(e): {repr(e)}"',
-                shell=True,
-                check=True)
-        raise e
+def run_command(command: str, cwd: str):
+    subprocess.run(command,
+                   cwd=cwd,
+                   shell=True,
+                   check=True)
 
 
-async def run_command_with_retries(title: str, command: str, retry_interval: int, cwd: str, *,
-                                   retries_before_notify=3, max_retries=10):
+async def run_command_with_retries(command: str, retry_interval: int, cwd: str, *,
+                                   max_retries=3):
     retries = 0
     while 1:
         try:
@@ -86,11 +78,6 @@ async def run_command_with_retries(title: str, command: str, retry_interval: int
             retries += 1
             if retries == max_retries:
                 raise e
-            if retries >= retries_before_notify:
-                subprocess.run(
-                    f'notify-send "backup_witch" "{title} failed {retries} times!\nrepr(e): {repr(e)}"',
-                    shell=True,
-                    check=True)
             await (asyncio.sleep(retry_interval))
 
 
