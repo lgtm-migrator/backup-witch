@@ -1,9 +1,13 @@
 import asyncio
 import subprocess
+import logging
 
 from services import SaveListOfInstalledAppsAndCopyFilesToCloud, SyncDeletionsOfFilesToCloud
 from configs import paths, cmd_args, filters
 from utils import State
+
+logging.basicConfig(filename=paths.PYTHON_LOG, level=logging.WARNING,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 async def main():
@@ -52,10 +56,11 @@ async def main():
             sync_deletes_of_files_to_cloud.run()
         )
     except BaseException as e:
+        logging.critical(repr(e))
         subprocess.run(
-            f'notify-send "backup_witch" "{repr(e)}" -u critical',
+            f'notify-send "backup_witch" "Exception Occurred\nCheck log -> {paths.PYTHON_LOG}" -u critical',
             shell=True,
-            check=True)
+            check=False)
         raise e
 
 
