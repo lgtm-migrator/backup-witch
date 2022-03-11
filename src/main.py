@@ -55,6 +55,8 @@ async def main():
             save_list_of_installed_apps_and_copy_files_to_cloud.run(),
             sync_deletes_of_files_to_cloud.run()
         )
+    except asyncio.exceptions.CancelledError as e:  # raised by KeyboardInterrupt
+        raise e
     except BaseException as e:
         if type(e) != LoggedException:
             logging.critical(repr(e))
