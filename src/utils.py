@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import subprocess
 import json
 import asyncio
@@ -57,14 +58,21 @@ class State:
 
 # region run utils
 
-def run_command(command: str, cwd: str):
-    subprocess.run(command,
-                   cwd=cwd,
-                   shell=True,
-                   check=True)
+def run_command(title: str, command: str, cwd: str):
+    try:
+        subprocess.run(command,
+                       cwd=cwd,
+                       shell=True,
+                       check=True,
+                       capture_output=True)
+    except subprocess.CalledProcessError as e:
+        logging.critical(f'{title} failed\n'
+                         f'repr(e): {repr(e)}\n'
+                         f'stderr: {e.stderr}\n')
+        raise LoggedException(f'{title} failed') from e
 
 
-async def run_command_with_retries(command: str, retry_interval: int, cwd: str, *,
+async def run_command_with_retries(title: str, command: str, retry_interval: int, cwd: str, *,
                                    max_retries=3):
     retries = 0
     while 1:
@@ -72,12 +80,16 @@ async def run_command_with_retries(command: str, retry_interval: int, cwd: str, 
             subprocess.run(command,
                            cwd=cwd,
                            shell=True,
-                           check=True)
+                           check=True,
+                           capture_output=True)
             break
         except subprocess.CalledProcessError as e:
             retries += 1
             if retries == max_retries:
-                raise e
+                logging.critical(f'{title} failed\n'
+                                 f'repr(e): {repr(e)}\n'
+                                 f'stderr: {e.stderr}\n')
+                raise LoggedException(f'{title} failed') from e
             await (asyncio.sleep(retry_interval))
 
 
@@ -128,5 +140,14 @@ class Service(ABC):
     @abstractmethod
     async def _body(self):
         pass
+
+
+# endregion
+
+
+# region exceptions
+
+class LoggedException(Exception):
+    pass
 
 # endregion
