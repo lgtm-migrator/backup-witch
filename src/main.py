@@ -30,7 +30,6 @@ async def main():
             state=state,
             state_key_prefix='list-apps-copy-files:',
             copy_command_cwd=paths.USER_HOME,
-            copy_command_retry_interval=cmd_args.RCLONE_COMMAND_RETRY_INTERVAL,
             copy_command_args=copy_command_args,
             apps_list_command_cwd=paths.USER_HOME,
             apps_list_command_args=apps_list_command_args
@@ -47,7 +46,6 @@ async def main():
             state=state,
             state_key_prefix='sync-deletions:',
             sync_command_cwd=paths.USER_HOME,
-            sync_command_retry_interval=cmd_args.RCLONE_COMMAND_RETRY_INTERVAL,
             sync_command_args=sync_command_args
         )
         # endregion
