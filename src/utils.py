@@ -68,7 +68,7 @@ def run_command(title: str, command: str, cwd: str):
     except subprocess.CalledProcessError as e:
         logging.critical(f'{title} failed\n'
                          f'repr(e): {repr(e)}\n'
-                         f'stderr: {e.stderr}\n')
+                         f'stderr: {e.stderr or "stderr is empty, check rclone log-file"}\n')
         raise LoggedException(f'{title} failed') from e
 
 
@@ -88,7 +88,7 @@ async def run_command_with_retries(title: str, command: str, retry_interval: int
             if retries == max_retries:
                 logging.critical(f'{title} failed\n'
                                  f'repr(e): {repr(e)}\n'
-                                 f'stderr: {e.stderr}\n')
+                                 f'stderr: {e.stderr or "stderr is empty, check rclone log-file"}\n')
                 raise LoggedException(f'{title} failed') from e
             await (asyncio.sleep(retry_interval))
 
