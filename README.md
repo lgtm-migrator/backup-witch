@@ -3,6 +3,7 @@
 
 **backup-witch** is an easily configurable and extendable backup script for Ubuntu Desktop OS.
 
+Made with **rclone**, **python** and **bash**.
 ## How it works
 
 **backup-witch** perform backup in three steps:
