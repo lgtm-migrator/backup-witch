@@ -25,7 +25,7 @@ Made with **rclone**, **python** and **bash**.
 Any **Debian** based distro with several things installed.
 
 For backup functionality: 
-+ python 3
++ python3
 + rclone
 
 For generating a list of installed apps:
