@@ -12,14 +12,14 @@ Made with **rclone**, **python** and **bash**.
 2. Runs *rclone copy* to copy new files and modifications of existing files to remote destination
 3. Runs *rclone sync* to sync local file system structure to remote destination, i.e. deletions of files
 
-## Script Structure
+## Script structure
 
 + *main.py* - script start file, where all services get initialized and run.
 + *services.py* - contains code of each service
 + *commands.py* - contains bash command composers, for every designated action
 + *utils.py* - contains utility functions and classes
 
-## System Requirements
+## System requirements
 
 **backup-witch** was made exclusively for Ubuntu Desktop, but can be easily adjusted for a system of your choice. 
 
