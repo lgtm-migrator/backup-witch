@@ -22,7 +22,7 @@ Made with **rclone**, **python** and **bash**.
 
 ## System requirements
 
-Any **Debian** based distro with several things installed, if you don't want to modify the script.
+Any **Debian** based distro with several things installed, if you **don't want to modify the script**.
 
 For backup functionality: 
 + python3
@@ -39,7 +39,7 @@ For notifying about errors:
 If you have skills in **python** and **bash** scripting, you can easily adjust **backup-witch** 
 according to your use case and needs.
 
-Backup functionality requires only python3 and rclone. So possibly can even work on Windows. 
+Backup functionality requires only python3 and rclone. So possibly can even work on **Windows**. 
 
 ## Prerequisites
 
