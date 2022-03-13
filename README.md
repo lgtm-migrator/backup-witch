@@ -6,7 +6,7 @@
 Made with **rclone**, **python** and **bash**.
 ## How it works
 
-**backup-witch** perform backup in three steps:
+**backup-witch** performs backup in three steps:
 
 1. Generates and saves a text file containing list of installed apps
 2. Runs *rclone copy* to copy new files and modifications of existing files to remote destination
