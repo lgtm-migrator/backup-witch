@@ -24,6 +24,11 @@ Made with **rclone**, **python** and **bash**.
 
 Any **Debian** based distro with several things installed, **if you don't want to modify the script**.
 
+Otherwise, you can easily adjust **backup-witch** according to your use case and needs.
+Backup functionality most likely will work even on **Windows**.
+
+### Dependencies
+
 For backup functionality: 
 + python3
 + rclone
@@ -35,11 +40,6 @@ For generating a list of installed apps:
 
 For notifying about errors:
 + notify-send
-
-If you have skills in **python** and **bash** scripting, you can easily adjust **backup-witch** 
-according to your use case and needs.
-
-Backup functionality requires only python3 and rclone. So possibly can even work on **Windows**. 
 
 ## Prerequisites
 
