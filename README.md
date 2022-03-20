@@ -22,7 +22,7 @@ Made with **rclone**, **python** and **bash**.
 
 ## System requirements
 
-Any **Debian** based distro with several things installed, if you **don't want to modify the script**.
+Any **Debian** based distro with several things installed, **if you don't want to modify the script**.
 
 For backup functionality: 
 + python3
