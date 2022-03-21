@@ -49,6 +49,8 @@ More info -> https://rclone.org/docs/
 
 ## How to run
 
+### Configure
+
 To run **backup-witch**, first copy *sample_configs* folder to *src* folder and rename it to **configs**
 
 ```bash
@@ -57,6 +59,24 @@ cp -r sample_configs src/configs
 
 Then set appropriate configs, and modify any you wish to change.
 
-After that use _main.py_ to run **backup-witch**.
+### Plain run
 
-You can use it in combination with systemd, to create a systemd service.
+Use _main.py_ to run **backup-witch**.
+
+### Running as systemd service
+
+To run **backup-witch** as **systemd** service use provided utility script _systemd-init.sh_
+
+It will create a backup-witch.service in _~/.config/systemd/user/_, creating any required dirs automatically.
+
+After that enable backup-witch.service
+
+```shell
+systemctl --user enable backup-witch.service
+```
+
+And start it
+
+```shell
+systemctl --user start backup-witch.service
+```
