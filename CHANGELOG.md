@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v1.3.0 (2022-03-21)
+### Feature
+* Add utility script for generating systemd service file ([`d589d84`](https://github.com/ark-key/backup-witch/commit/d589d84cc1e52e9314a9b76f9588ea5da9ace0c4))
+
+### Documentation
+* Update readme ([`3f695ca`](https://github.com/ark-key/backup-witch/commit/3f695cae497762fe6220e82b14423c4f7bccfe09))
+* Update readme ([`861a425`](https://github.com/ark-key/backup-witch/commit/861a42573a3e08447f5bc54368c02d49df3ed16a))
+
 ## v1.2.0 (2022-03-20)
 ### Feature
 * Add logging ([`e5ed587`](https://github.com/ark-key/backup-witch/commit/e5ed58726675e5fb62859b6445062d06e738415f))
