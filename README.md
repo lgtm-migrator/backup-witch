@@ -56,7 +56,7 @@ You can also name the crypt remote as _backup-witch_.
 The config would then look like this:
 
 ```python
- BACKUP_WITCH_REMOTE="backup-witch:"
+BACKUP_WITCH_REMOTE="backup-witch:"
 ```
 
 If you want to use standard remote for backup destination - set config option to complete path of folder on remote, without trailing slash. For example: 
