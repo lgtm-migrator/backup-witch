@@ -6,11 +6,10 @@ import json
 import asyncio
 from datetime import datetime, timezone
 from abc import ABC, abstractmethod
-from typing import Final
+from typing import Final, Callable
 
 
 # region time
-
 def time_stamp() -> str:
     return datetime.now(timezone.utc).astimezone().isoformat()
 
@@ -58,7 +57,11 @@ class State:
 
 # region run utils
 
-def run_command(title: str, command: str, cwd: str):
+def run_command(title: str,
+                command: str,
+                cwd: str,
+                *,
+                called_process_error_handler: Callable[[subprocess.CalledProcessError], bool] | None = None):
     try:
         subprocess.run(command,
                        cwd=cwd,
@@ -66,10 +69,14 @@ def run_command(title: str, command: str, cwd: str):
                        check=True,
                        capture_output=True)
     except subprocess.CalledProcessError as e:
-        logging.critical(f'{title} failed\n'
-                         f'repr(e): {repr(e)}\n'
-                         f'stderr: {e.stderr or "stderr is empty, check rclone log-file"}\n')
-        raise LoggedException(f'{title} failed') from e
+        logged_exception = True
+        if called_process_error_handler:
+            logged_exception = called_process_error_handler(e)
+        if logged_exception:
+            logging.critical(f'{title} failed\n'
+                             f'repr(e): {repr(e)}\n'
+                             f'stderr: {e.stderr or "stderr is empty, check rclone log-file"}\n')
+            raise LoggedException(f'{title} failed') from e
 
 
 # endregion
