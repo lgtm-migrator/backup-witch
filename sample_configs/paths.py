@@ -1,16 +1,21 @@
 from pathlib import Path
-from .cmd_args import BACKUP_WITCH_REMOTE
 
 USER_HOME = Path('~/').expanduser().__str__()
 
-CLOUD_CURRENT = BACKUP_WITCH_REMOTE + '/current'
+BACKUP_WITCH_REMOTE = 'CHANGE_ME-!'  # set to appropriate rclone remote, e.g. 'remote:'
 
-CLOUD_BACKUPS = BACKUP_WITCH_REMOTE + '/backups'
+CLOUD_LATEST = BACKUP_WITCH_REMOTE + '/latest'
 
-PYTHON_LOG = USER_HOME + '/.backup_witch.python.log'
+CLOUD_PREVIOUS = BACKUP_WITCH_REMOTE + '/previous'
 
-RCLONE_COPY_LOG = USER_HOME + '/.backup_witch.rclone_copy.log'
+PYTHON_LOG = USER_HOME + '/.backup-witch.python.log'
 
-RCLONE_SYNC_LOG = USER_HOME + '/.backup_witch.rclone_sync.log'
+RCLONE_COPY_LOG = USER_HOME + '/.backup-witch.rclone_copy.log'
 
-STATE_FILE = USER_HOME + '/.backup_witch.state.data'
+STATE_FILE = USER_HOME + '/.backup-witch.state.data'
+
+APPS_LIST_FILE = USER_HOME + '/.list-of-installed-apps.txt'
+
+FILES_ALL_FILE = USER_HOME + '/.backup-witch-files-all.txt'
+
+FILES_NEW_FILE = USER_HOME + '/.backup-witch-files-new.txt'
