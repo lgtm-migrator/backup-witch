@@ -2,7 +2,7 @@ import asyncio
 import subprocess
 import logging
 
-from services import SaveListOfInstalledAppsAndCopyFilesToCloud, SyncDeletionsOfFilesToCloud
+from services import BackupWitchService
 from configs import paths, cmd_args, filters
 from utils import State, LoggedException
 
@@ -13,46 +13,23 @@ logging.basicConfig(filename=paths.PYTHON_LOG, level=logging.WARNING,
 async def main():
     try:
         state = State(paths.STATE_FILE)
-        # region services init
-        copy_command_args = SaveListOfInstalledAppsAndCopyFilesToCloud.CopyCommandArguments(
-            destination=paths.CLOUD_CURRENT,
-            backup_dir=paths.CLOUD_BACKUPS,
-            no_traverse_max_age=cmd_args.NO_TRAVERSE_MAX_AGE,
-            log_file=paths.RCLONE_COPY_LOG,
-            filters=filters.RCLONE_FILTER,
-            additional_rclone_flags=cmd_args.RCLONE_FLAGS
-        )
-        apps_list_command_args = SaveListOfInstalledAppsAndCopyFilesToCloud.AppsListCommandArguments(
-            file_name=cmd_args.APPS_LIST_FILE_NAME
-        )
-        save_list_of_installed_apps_and_copy_files_to_cloud = SaveListOfInstalledAppsAndCopyFilesToCloud(
+        backup_witch_service = BackupWitchService(
             run_interval=cmd_args.LIST_APPS_AND_COPY_FILES_INTERVAL,
             state=state,
             state_key_prefix='list-apps-copy-files:',
-            copy_command_cwd=paths.USER_HOME,
-            copy_command_args=copy_command_args,
-            apps_list_command_cwd=paths.USER_HOME,
-            apps_list_command_args=apps_list_command_args
+            backup_cwd=paths.USER_HOME,
+            destination_latest=paths.CLOUD_LATEST,
+            destination_previous=paths.CLOUD_PREVIOUS,
+            rclone_filter=filters.RCLONE_FILTER,
+            rclone_log_file=paths.RCLONE_COPY_LOG,
+            no_traverse_max_age=cmd_args.NO_TRAVERSE_MAX_AGE,
+            files_all_file=paths.FILES_ALL_FILE,
+            files_new_file=paths.FILES_NEW_FILE,
+            additional_rclone_flags=cmd_args.RCLONE_FLAGS,
+            apps_list_output_file=paths.APPS_LIST_FILE,
+            ignore_permission_errors=cmd_args.IGNORE_PERMISSION_ERRORS
         )
-        sync_command_args = SyncDeletionsOfFilesToCloud.SyncCommandArguments(
-            destination=paths.CLOUD_CURRENT,
-            backup_dir=paths.CLOUD_BACKUPS,
-            log_file=paths.RCLONE_SYNC_LOG,
-            filters=filters.RCLONE_FILTER,
-            additional_rclone_flags=cmd_args.RCLONE_FLAGS
-        )
-        sync_deletes_of_files_to_cloud = SyncDeletionsOfFilesToCloud(
-            run_interval=cmd_args.SYNC_DELETIONS_INTERVAL,
-            state=state,
-            state_key_prefix='sync-deletions:',
-            sync_command_cwd=paths.USER_HOME,
-            sync_command_args=sync_command_args
-        )
-        # endregion
-        await asyncio.gather(
-            save_list_of_installed_apps_and_copy_files_to_cloud.run(),
-            sync_deletes_of_files_to_cloud.run()
-        )
+        await backup_witch_service.run()
     except BaseException as e:
         if cmd_args.DEBUG:
             raise e
