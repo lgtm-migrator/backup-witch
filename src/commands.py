@@ -7,7 +7,7 @@ def rclone_copy_files(destination: str,
                       files_new_file: str,
                       additional_rclone_flags: str = '') -> str:
     command = f'rclone copy ./ {destination} ' \
-              f'--backup-dir {backup_dir}/{time_stamp()} ' \
+              f'--backup-dir "{backup_dir}/{time_stamp()}" ' \
               f'--log-file={log_file} ' \
               f'{additional_rclone_flags} --links ' \
               f'--files-from-raw {files_new_file}'
