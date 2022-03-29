@@ -7,16 +7,18 @@ automated backups of data from user home folder to remote destination.
 Made with **rclone**, **python** and **bash**.
 ## How it works
 
-**backup-witch** performs backup in three steps.
+**backup-witch** performs backup in four steps.
 
-1. Generates and saves a text file containing list of installed apps
-2. Runs *rclone copy* to copy new files and modifications of existing files to remote destination
-3. Runs *rclone sync* to sync local file system structure to remote destination, i.e. deletions of files
+1. Saves list of installed apps
+2. Saves list of all files, i.e. source directory structure
+3. Saves list of new files, i.e. a list of files for upload by current backup
+   + This list includes new files, as well as existing files, which were modified since last backup
+4. Runs *rclone copy* to copy files from source to backup destination
 
 ## Script structure
 
-+ *main.py* - script start file, where all services get initialized and run
-+ *services.py* - contains code of each service
++ *main.py* - script start file
++ *services.py* - contains code for script services
 + *commands.py* - contains bash command composers, for every designated action
 + *utils.py* - contains utility functions and classes
 
