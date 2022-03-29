@@ -2,6 +2,17 @@
 
 <!--next-version-placeholder-->
 
+## v2.0.0 (2022-03-29)
+### Breaking
+* complete redesign of core parts ([`09f4042`](https://github.com/ark-key/backup-witch/commit/09f404297987f9c8362cbd7232245a61cc5419df))
+
+### Documentation
+* Update readme ([`d009a3e`](https://github.com/ark-key/backup-witch/commit/d009a3e591c4c8d3383bb8b36ca131b6c57af395))
+* Update sample configs ([`45d4411`](https://github.com/ark-key/backup-witch/commit/45d4411a7333a18dc3e591e4127c32a9a38129f4))
+* Update readme ([`aa6a05c`](https://github.com/ark-key/backup-witch/commit/aa6a05c2fa9614b078b9e3ca5a1b9a2edb58c366))
+* Update readme ([`8c5c61c`](https://github.com/ark-key/backup-witch/commit/8c5c61c3c746069b0defbf02458783e2a90e9a59))
+* Update readme ([`cb76012`](https://github.com/ark-key/backup-witch/commit/cb760123cf6fc2211daeea1dd0fa6b575bf600d6))
+
 ## v1.3.0 (2022-03-21)
 ### Feature
 * Add utility script for generating systemd service file ([`d589d84`](https://github.com/ark-key/backup-witch/commit/d589d84cc1e52e9314a9b76f9588ea5da9ace0c4))
