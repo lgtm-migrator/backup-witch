@@ -1,5 +1,7 @@
 from . import paths
 
+from pathlib import PurePath
+
 _exclude = ' '.join([
     # global
     '--filter "- venv/**"',
@@ -24,9 +26,9 @@ _exclude = ' '.join([
     '--filter "- /.mozilla/firefox/*/storage/**"',
     '--filter "- /.var/app/*/cache/**"',
     # absolute
-    f'--filter "- {paths.STATE_FILE}"',
-    f'--filter "- {paths.PYTHON_LOG}"',
-    f'--filter "- {paths.RCLONE_COPY_LOG}"',
+    f'--filter "- {PurePath(paths.STATE_FILE).name}"',
+    f'--filter "- {PurePath(paths.PYTHON_LOG).name}"',
+    f'--filter "- {PurePath(paths.RCLONE_COPY_LOG).name}"',
 ])
 
 _include = ' '.join([
