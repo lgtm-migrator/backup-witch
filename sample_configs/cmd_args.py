@@ -7,4 +7,6 @@ RCLONE_FLAGS = '--fast-list --drive-chunk-size 64M --transfers 10 --buffer-size 
 
 IGNORE_PERMISSION_DENIED_ERRORS_ON_SOURCE = True
 
+IGNORE_PARTIALLY_WRITTEN_FILES_UPLOAD_ERRORS = True
+
 DEBUG = False
