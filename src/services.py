@@ -2,7 +2,8 @@ import subprocess
 
 from commands import rclone_files_list, save_list_of_installed_apps, rclone_copy_files, \
     truncate_file
-from utils import State, run_command, Service, seconds_passed_from_time_stamp_till_now, \
+from utils import State, rclone_log_contains_not_ignored_errors, run_command, Service, \
+    seconds_passed_from_time_stamp_till_now, \
     time_stamp
 
 import copy
@@ -25,7 +26,8 @@ class BackupWitchService(Service):
                  additional_rclone_flags: str,
                  apps_list_output_file: str,
                  *,
-                 ignore_permission_denied_errors_on_source: bool = False):
+                 ignore_permission_denied_errors_on_source: bool = False,
+                 ignore_partially_written_files_upload_errors: bool = False):
         super().__init__(run_interval, state, state_key_prefix)
         self._backup_cwd = backup_cwd
         self._destination_latest = destination_latest
@@ -38,7 +40,8 @@ class BackupWitchService(Service):
         self._additional_rclone_flags = additional_rclone_flags
         self._apps_list_command = save_list_of_installed_apps(apps_list_output_file)
         self._truncate_log_command = truncate_file(rclone_log_file)
-        self._ignore_permission_errors = ignore_permission_denied_errors_on_source
+        self._ignore_permission_denied_errors_on_source = ignore_permission_denied_errors_on_source
+        self._ignore_partially_written_files_upload_errors = ignore_partially_written_files_upload_errors
 
     async def _body(self):
         run_command(title='truncate rclone copy log file',
@@ -69,17 +72,20 @@ class BackupWitchService(Service):
         )
 
     def _files_list_command_error_handler(self, e: subprocess.CalledProcessError) -> bool:
-        if self._ignore_permission_errors and e.returncode == 6:
+        if self._ignore_permission_denied_errors_on_source and e.returncode == 6:
             return False
         return True
 
     def _copy_command_error_handler(self, _: subprocess.CalledProcessError) -> bool:
-        if self._ignore_permission_errors:
+        checks_for_not_ignored_errors = []
+        if self._ignore_permission_denied_errors_on_source:
+            checks_for_not_ignored_errors.append(lambda l, _: 'permission denied' not in l)
+        if self._ignore_partially_written_files_upload_errors:
+            checks_for_not_ignored_errors.append(lambda l, _: 'source file is being updated' not in l)
+            checks_for_not_ignored_errors.append(lambda _, f: 'BadDigest' not in f.readline())
+        if checks_for_not_ignored_errors:
             with open(self._rclone_log_file) as file:
-                for line in file:
-                    if 'ERROR' in line and 'permission denied' not in line:
-                        return True
-                return False
+                return rclone_log_contains_not_ignored_errors(file, checks_for_not_ignored_errors)
         return True
 
     def _list_of_new_files_command(self, seconds_passed_from_last_copy_run_start: int) -> str:

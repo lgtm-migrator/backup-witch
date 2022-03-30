@@ -6,7 +6,7 @@ import json
 import asyncio
 from datetime import datetime, timezone
 from abc import ABC, abstractmethod
-from typing import Final, Callable
+from typing import Final, Callable, TextIO
 
 
 # region time
@@ -131,9 +131,25 @@ class Service(ABC):
 # endregion
 
 
-# region exceptions
+# region misc
+
+def rclone_log_contains_not_ignored_errors(file: TextIO, checks: list[Callable[[str, TextIO], bool]]) -> bool:
+    no_errors_encountered = True
+    for line in file:
+        if 'ERROR' in line:
+            no_errors_encountered = False
+            if all([check(line, file) for check in checks]):
+                return True
+    if no_errors_encountered:
+        raise Unexpected('Rclone log was checked for not ignored errors but no errors were encountered')
+    return False
+
 
 class LoggedException(Exception):
+    pass
+
+
+class Unexpected(Exception):
     pass
 
 # endregion

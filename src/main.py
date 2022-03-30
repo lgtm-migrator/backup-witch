@@ -27,7 +27,8 @@ async def main():
             files_new_file=paths.FILES_NEW_FILE,
             additional_rclone_flags=cmd_args.RCLONE_FLAGS,
             apps_list_output_file=paths.APPS_LIST_FILE,
-            ignore_permission_denied_errors_on_source=cmd_args.IGNORE_PERMISSION_DENIED_ERRORS_ON_SOURCE
+            ignore_permission_denied_errors_on_source=cmd_args.IGNORE_PERMISSION_DENIED_ERRORS_ON_SOURCE,
+            ignore_partially_written_files_upload_errors=cmd_args.IGNORE_PARTIALLY_WRITTEN_FILES_UPLOAD_ERRORS
         )
         await backup_witch_service.run()
     except BaseException as e:
