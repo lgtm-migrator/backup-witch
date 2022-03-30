@@ -25,7 +25,7 @@ class BackupWitchService(Service):
                  additional_rclone_flags: str,
                  apps_list_output_file: str,
                  *,
-                 ignore_permission_errors: bool = False):
+                 ignore_permission_denied_errors_on_source: bool = False):
         super().__init__(run_interval, state, state_key_prefix)
         self._backup_cwd = backup_cwd
         self._destination_latest = destination_latest
@@ -38,7 +38,7 @@ class BackupWitchService(Service):
         self._additional_rclone_flags = additional_rclone_flags
         self._apps_list_command = save_list_of_installed_apps(apps_list_output_file)
         self._truncate_log_command = truncate_file(rclone_log_file)
-        self._ignore_permission_errors = ignore_permission_errors
+        self._ignore_permission_errors = ignore_permission_denied_errors_on_source
 
     async def _body(self):
         run_command(title='truncate rclone copy log file',
@@ -60,8 +60,9 @@ class BackupWitchService(Service):
                     called_process_error_handler=self._files_list_command_error_handler)
         run_start_time_stamp = time_stamp()
         run_command(title='copy files to cloud',
-                    command=self._rclone_copy_command(seconds_passed_from_last_copy_run_start),
-                    cwd=self._backup_cwd)
+                    command=self._copy_command(seconds_passed_from_last_copy_run_start),
+                    cwd=self._backup_cwd,
+                    called_process_error_handler=self._copy_command_error_handler)
         self._state_manager.set(
             key='last_run_start_time_stamp',
             value=run_start_time_stamp
@@ -72,11 +73,20 @@ class BackupWitchService(Service):
             return False
         return True
 
+    def _copy_command_error_handler(self, _: subprocess.CalledProcessError) -> bool:
+        if self._ignore_permission_errors:
+            with open(self._rclone_log_file) as file:
+                for line in file:
+                    if 'ERROR' in line and 'permission denied' not in line:
+                        return True
+                return False
+        return True
+
     def _list_of_new_files_command(self, seconds_passed_from_last_copy_run_start: int) -> str:
         rclone_filter = f'--max-age {seconds_passed_from_last_copy_run_start}s {self._rclone_filter}'
         return rclone_files_list(self._files_new_file, rclone_filter)
 
-    def _rclone_copy_command(self, seconds_passed_from_last_copy_run_start: int) -> str:
+    def _copy_command(self, seconds_passed_from_last_copy_run_start: int) -> str:
         flags = self._additional_rclone_flags
         if seconds_passed_from_last_copy_run_start <= self._no_traverse_max_age:
             flags += ' --no-traverse'
