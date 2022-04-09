@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v2.2.0 (2022-04-09)
+### Feature
+* Add ability to skip missing files from source ([`afb2b12`](https://github.com/ark-key/backup-witch/commit/afb2b125e224e64bedc071e503e975d8d212eeeb))
+
+### Performance
+* Use generator expression instead of list comprehension ([`03cda83`](https://github.com/ark-key/backup-witch/commit/03cda8339dff7009bc8a4b1799346f17ffa939fe))
+
 ## v2.1.0 (2022-03-30)
 ### Feature
 * Add option to ignore errors with uploading of partially written files ([`bb3b7fb`](https://github.com/ark-key/backup-witch/commit/bb3b7fbdbb44a8698cb10241e7f58fab6463deba))
