@@ -10,6 +10,7 @@ from typing import Final, Callable, TextIO
 
 
 # region time
+
 def time_stamp() -> str:
     return datetime.now(timezone.utc).astimezone().isoformat(' ', 'seconds')
 
@@ -138,7 +139,7 @@ def rclone_log_contains_not_ignored_errors(file: TextIO, checks: list[Callable[[
     for line in file:
         if 'ERROR' in line:
             no_errors_encountered = False
-            if all([check(line, file) for check in checks]):
+            if all(check(line, file) for check in checks):
                 return True
     if no_errors_encountered:
         raise Unexpected('Rclone log was checked for not ignored errors but no errors were encountered')
