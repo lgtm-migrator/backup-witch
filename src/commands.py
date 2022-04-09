@@ -20,16 +20,22 @@ def rclone_files_list(output_file: str, filters: str) -> str:
 
 
 def save_list_of_installed_apps(output_file: str) -> str:
-    flatpak_list = f'flatpak list --app >> {output_file}'
-    snap_list = f'snap list >> {output_file}'
-    apt_list = f'apt-mark showmanual >> {output_file}'
-    divider = f"echo '---' >> {output_file}"
-    command = f'{truncate_file(output_file)} ' \
+    apps_list = 'list=""'
+    flatpak_list = f"list+=$(flatpak list --app)+$'\n'"
+    snap_list = f"list+=$(snap list)+$'\n'"
+    apt_list = f"list+=$(apt-mark showmanual)+$'\n'"
+    divider = f"list+=$'---\n'"
+    save_apps_list_to_file = f'echo "$list" >> {output_file}'
+    command = f'{apps_list} ' \
               f'&& {flatpak_list} ' \
-              f'&& {divider} ' \
+              f'&& {divider}' \
               f'&& {snap_list} ' \
               f'&& {divider} ' \
-              f'&& {apt_list}'
+              f'&& {apt_list};' \
+              f'if [[ "$(< {output_file})" != "$list" ]]; ' \
+              f'then {truncate_file(output_file)} ' \
+              f'&& {save_apps_list_to_file}; ' \
+              f'fi'
     return command
 
 
