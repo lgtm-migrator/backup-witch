@@ -27,7 +27,8 @@ class BackupWitchService(Service):
                  apps_list_output_file: str,
                  *,
                  ignore_permission_denied_errors_on_source: bool = False,
-                 ignore_partially_written_files_upload_errors: bool = False):
+                 ignore_partially_written_files_upload_errors: bool = False,
+                 ignore_missing_files: bool = True):
         super().__init__(run_interval, state, state_key_prefix)
         self._backup_cwd = backup_cwd
         self._destination_latest = destination_latest
@@ -42,6 +43,7 @@ class BackupWitchService(Service):
         self._truncate_log_command = truncate_file(rclone_log_file)
         self._ignore_permission_denied_errors_on_source = ignore_permission_denied_errors_on_source
         self._ignore_partially_written_files_upload_errors = ignore_partially_written_files_upload_errors
+        self._ignore_missing_files = ignore_missing_files
 
     async def _body(self):
         run_command(title='truncate rclone copy log file',
@@ -78,6 +80,8 @@ class BackupWitchService(Service):
 
     def _copy_command_error_handler(self, _: subprocess.CalledProcessError) -> bool:
         checks_for_not_ignored_errors = []
+        if self._ignore_missing_files:
+            checks_for_not_ignored_errors.append(lambda l, _: 'no such file or directory' not in l)
         if self._ignore_permission_denied_errors_on_source:
             checks_for_not_ignored_errors.append(lambda l, _: 'permission denied' not in l)
         if self._ignore_partially_written_files_upload_errors:
