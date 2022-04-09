@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v2.1.0 (2022-03-30)
+### Feature
+* Add option to ignore errors with uploading of partially written files ([`bb3b7fb`](https://github.com/ark-key/backup-witch/commit/bb3b7fbdbb44a8698cb10241e7f58fab6463deba))
+
+### Fix
+* Add handling of permission errors for copy command ([`727dc9a`](https://github.com/ark-key/backup-witch/commit/727dc9a26745b6d1809f68bb5e0392a348f81e2e))
+* Add double quotes around --backup-dir argument for rclone copy ([`b6eaf37`](https://github.com/ark-key/backup-witch/commit/b6eaf37e80daf7ecc91fee63440967f15fabcf25))
+
 ## v2.0.0 (2022-03-29)
 ### Breaking
 * complete redesign of core parts ([`09f4042`](https://github.com/ark-key/backup-witch/commit/09f404297987f9c8362cbd7232245a61cc5419df))
