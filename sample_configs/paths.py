@@ -2,11 +2,11 @@ from pathlib import Path
 
 USER_HOME = Path('~/').expanduser().__str__()
 
-BACKUP_WITCH_REMOTE = 'CHANGE_ME-!'  # set to appropriate rclone remote, e.g. 'remote:'
+BACKUP_WITCH_DESTINATION = 'CHANGE_ME-!'  # for example: 'remote:backup-witch-folder'
 
-CLOUD_LATEST = BACKUP_WITCH_REMOTE + '/latest'
+CLOUD_LATEST = BACKUP_WITCH_DESTINATION + '/latest'
 
-CLOUD_PREVIOUS = BACKUP_WITCH_REMOTE + '/previous'
+CLOUD_PREVIOUS = BACKUP_WITCH_DESTINATION + '/previous'
 
 PYTHON_LOG = USER_HOME + '/.backup-witch.python.log'
 
