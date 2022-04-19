@@ -45,26 +45,16 @@ For notifying about errors:
 
 ## Prerequisites
 
-You will need a properly configured rclone remote to be used as backup destination.
+You will need to have a properly configured rclone remote for backup destination.
 
 More info -> https://rclone.org/docs/
 
-Corresponding confing option in *cmd_args.py* is BACKUP_WITCH_REMOTE.
+Corresponding config option in *cmd_args.py* is BACKUP_WITCH_DESTINATION.
 
-By default, **backup-witch** assumes remote to be of type **crypt**. That is, that this remote already points to specific directory on standard remote, e.g. directory on google drive or dropbox, or aws s3, named *@backup-witch* (it can be named whatever you want, *@backup-witch* is a personal preference with *@* to mark the folder for personal reminder as special and to be used only through programmatic way). 
-
-You can also name the crypt remote as _backup-witch_. 
-
-The config would then look like this:
+Set this option to complete path of folder on remote, without trailing slash. For example: 
 
 ```python
-BACKUP_WITCH_REMOTE="backup-witch:"
-```
-
-If you want to use standard remote for backup destination - set config option to complete path of folder on remote, without trailing slash. For example: 
-
-```python
-BACKUP_WITCH_REMOTE="dropbox:/backup-witch" 
+BACKUP_WITCH_DESTINATION="dropbox:backup-witch" 
 ```
 
 ## How to run
