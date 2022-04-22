@@ -43,7 +43,8 @@ class State:
         state_file_contents = subprocess.run(f'cat {self._save_file_path}',
                                              shell=True,
                                              check=True,
-                                             stdout=subprocess.PIPE).stdout.decode('utf-8').strip()
+                                             text=True,
+                                             stdout=subprocess.PIPE).stdout.strip()
         if not state_file_contents:
             return None
         return json.loads(state_file_contents)
@@ -73,6 +74,7 @@ def run_command(title: str,
         logged_exception = True
         if called_process_error_handler:
             logged_exception = called_process_error_handler(e)
+        # todo stderr to output, not to file
         if logged_exception:
             logging.critical(f'{title} failed\n'
                              f'repr(e): {repr(e)}\n'
