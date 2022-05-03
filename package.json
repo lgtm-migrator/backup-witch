@@ -1,0 +1,48 @@
+{
+  "name": "backup-witch",
+  "version": "0.0.0-development",
+  "description": "rclone backup automation tool",
+  "author": "ark-key",
+  "private": "true",
+  "scripts": {
+    "test": "exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ark-key/backup-witch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ark-key/backup-witch/issues"
+  },
+  "homepage": "https://github.com/ark-key/backup-witch#readme",
+  "devDependencies": {
+    "semantic-release": "^19.0.2"
+  },
+  "release": {
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "angular",
+          "releaseRules": [
+            {
+              "type": "docs",
+              "release": "patch"
+            },
+            {
+              "type": "refactor",
+              "release": "patch"
+            },
+            {
+              "type": "chore",
+              "release": "patch"
+            }
+          ]
+        }
+      ],
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      "@semantic-release/github"
+    ]
+  }
+}

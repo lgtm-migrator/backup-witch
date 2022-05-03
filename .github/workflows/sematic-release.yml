@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  release:
+  semantic-release:
     runs-on: ubuntu-latest
 
     concurrency:
@@ -18,7 +18,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Python Semantic Release
-        uses: relekang/python-semantic-release@master
+      - uses: actions/setup-node@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          cache: npm
+          node-version: 18.x
+
+      - run: npm ci
+      - run: npm run test
+      - run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
