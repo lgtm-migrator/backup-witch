@@ -1,3 +1,13 @@
-/src/config
-/.idea
+/.idea/
+
+/venv/
+
+/env/
+/node_modules/
+
 __pycache__/
+/.pytest_cache/
+
+/src/config/
+
+/test/test-artifacts/
