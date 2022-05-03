@@ -4,6 +4,7 @@ import logging
 import subprocess
 import json
 import asyncio
+import re
 from datetime import datetime, timezone
 from abc import ABC, abstractmethod
 from typing import Final, Callable, TextIO
@@ -37,7 +38,7 @@ class State:
         self._save_state_to_file()
 
     def _load_state_from_file(self) -> dict | None:
-        subprocess.run(f'touch -a {self._save_file_path}',
+        subprocess.run(f'touch -a {self._save_file_path}',  # todo switch to pathlib read_text, write_text
                        check=True,
                        shell=True)
         state_file_contents = subprocess.run(f'cat {self._save_file_path}',
@@ -51,35 +52,46 @@ class State:
 
     def _save_state_to_file(self):
         subprocess.run(f"echo '{json.dumps(self.data)}' > {self._save_file_path}",
+                       shell=True,
                        check=True,
-                       shell=True)
+                       text=True)
 
 
 # endregion
 
-# region run utils
+# region bash utils
 
-def run_command(title: str,
-                command: str,
-                cwd: str,
-                *,
-                called_process_error_handler: Callable[[subprocess.CalledProcessError], bool] | None = None):
+class BashScript(ABC):
+    def __init__(self,
+                 name: str,
+                 code: str):
+        self.name = name
+        self.code = re.sub('  +', ' ', code)
+
+
+def run_bash_script(script: BashScript,
+                    *,
+                    cwd: str = '/',
+                    bash_exe: str = '/bin/bash',
+                    on_error_handler: Callable[[subprocess.CalledProcessError], bool] | None = None):
     try:
-        subprocess.run(command,
+        subprocess.run(f'({script.code})',
                        cwd=cwd,
                        shell=True,
+                       executable=bash_exe,
                        check=True,
+                       text=True,
                        capture_output=True)
     except subprocess.CalledProcessError as e:
         logged_exception = True
-        if called_process_error_handler:
-            logged_exception = called_process_error_handler(e)
-        # todo stderr to output, not to file
+        if on_error_handler:
+            logged_exception = on_error_handler(e)
         if logged_exception:
-            logging.critical(f'{title} failed\n'
-                             f'repr(e): {repr(e)}\n'
-                             f'stderr: {e.stderr or "stderr is empty, check rclone log-file"}\n')
-            raise LoggedException(f'{title} failed') from e
+            logging.critical(f'{script.name} failed\n'
+                             f'repr(e):\n{repr(e)}\n'
+                             f'stderr:\n{e.stderr}\n'
+                             f'---')
+            raise LoggedException(f'run_bash_script failed - {script.name}') from e
 
 
 # endregion
