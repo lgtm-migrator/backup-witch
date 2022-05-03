@@ -4,9 +4,6 @@
   "description": "rclone backup automation tool",
   "author": "ark-key",
   "private": "true",
-  "scripts": {
-    "test": "exit 0"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ark-key/backup-witch.git"
