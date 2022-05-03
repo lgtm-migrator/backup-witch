@@ -29,7 +29,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install rclone
-      - run: curl https://rclone.org/install.sh | sudo bash
+        run: curl https://rclone.org/install.sh | sudo bash
 
       - name: Install test dependencies
         run: |
