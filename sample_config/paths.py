@@ -17,5 +17,3 @@ RCLONE_MATCH_LOG = USER_HOME + '/.backup-witch.rclone-match.log'
 STATE_FILE = USER_HOME + '/.backup-witch.state.data'
 
 APPS_LIST_FILE = USER_HOME + '/.list-of-installed-apps.txt'
-
-BASH_SCRIPTS_DIR = Path(__file__).parent.parent.__str__() + '/bash-scripts'
