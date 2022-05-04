@@ -14,7 +14,7 @@ class RcloneMatchDestinationToSourceScript(BashScript):
         source_listing=$(rclone lsf -R --files-only --links {filters} "{source}")
         destination_listing=$(rclone lsf -vv -R --files-only --links "{destination}")
         files_to_move=$(comm -13 <(sort <(echo -e "$source_listing")) <(sort <(echo -e "$destination_listing")))
-        
+        set -o pipefail
         rclone move "{destination}" \
         "{backup_dir}/{time_stamp}" \
         --files-from-raw <(echo -e "$files_to_move") \
