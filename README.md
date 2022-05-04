@@ -8,22 +8,26 @@ Made with **python** and **bash**.
 
 ## How it works
 
-**backup-witch** performs backup in three step:
+**backup-witch** operates with backup source, i.e. source of backup, and backup destination.
 
-1. Saves file, containing a list of installed apps (apt, snap, flatpak)
-2. Runs ***rclone copy*** to copy files from source to destination, old versions of files are moved to destination_previous
-4. Runs ***rclone move*** to match destination to source, files deleted on source are moved to destination_previous
+On backup destination **backup-witch** creates two folders: latest and previous. _latest_ - is the backup source synced
+to the backup destination (the latest snapshot of data). _previous_ - is the folder, where previous version of files, as
+well as deleted files, reside.
+
+By default, backup source is the user _home_ folder. Because of that, before performing backup **backup-witch** also
+creates a txt file, containing a list of installed apps (apt, snap,
+flatpak). This file can later be used during restore process to install all apps, that were present on system.
+
+## Dependencies
+
++ bash
++ python3
++ rclone
++ notify-send (for notifying about errors)
 
 ## System requirements
 
-Any **Linux** distro, supported by **rclone**, with several things installed:
-
-+ For backup functionality:
-    + python3
-    + rclone
-
-+ For notifying about errors:
-    + notify-send
+Any system, that supports the dependencies.
 
 ## Prerequisites
 
@@ -46,8 +50,6 @@ Then set appropriate rclone remote as backup destination.
 Corresponding config option will be in *src/config/paths.py*.
 
 Set this option to complete path of folder on remote, without trailing slash. For example:
-
-***src/config/paths.py***
 
 ```python
 BACKUP_WITCH_DESTINATION = "dropbox:backup-witch" 
