@@ -6,7 +6,7 @@ from typing import Callable, TextIO
 def rclone_log_contains_not_ignored_errors(file: TextIO, checks: list[Callable[[str, TextIO], bool]]) -> bool:
     no_errors_encountered = True
     for line in file:
-        if 'ERROR' in line:
+        if 'ERROR' in line and "Can't retry any of the errors" not in line:
             no_errors_encountered = False
             if all(check(line, file) for check in checks):
                 return True
