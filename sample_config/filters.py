@@ -29,6 +29,7 @@ _exclude = ' '.join([
     f'--filter "- {PurePath(paths.STATE_FILE).name}"',
     f'--filter "- {PurePath(paths.PYTHON_LOG).name}"',
     f'--filter "- {PurePath(paths.RCLONE_COPY_LOG).name}"',
+    f'--filter "- {PurePath(paths.RCLONE_MATCH_LOG).name}"',
 ])
 
 _include = ' '.join([
