@@ -11,7 +11,7 @@ class RcloneCopyFilesScript(BashScript):
                  filters: str = '',
                  additional_rclone_flags: str = ''):
         code = f'''
-        rclone copy -vv "{source}" "{destination}" \
+        rclone copy "{source}" "{destination}" \
         --backup-dir "{backup_dir}/{time_stamp}" \
         --links \
         {filters} \
