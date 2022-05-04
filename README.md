@@ -2,18 +2,18 @@
 <h3 align="center">rclone backup automation tool</h3>
 
 **backup-witch** is an easily configurable and extendable tool for performing continuous
-automated backup of data with rclone.
+automated backup of data with **rclone**.
 
-Made with **rclone**, **python** and **bash**.
+Made with **python** and **bash**.
 
 ## How it works
 
 **backup-witch** performs backup in three step:
 
 1. Saves file, containing a list of installed apps (apt, snap, flatpak)
-2. Runs *rclone copy* to copy files from source to destination_latest, old versions of
+2. Runs ***rclone copy*** to copy files from source to destination_latest, old versions of
    files are moved to destination_previous
-3. Runs *rclone move* to match destination_latest to source, files deleted on source are moved
+3. Runs ***rclone move*** to match destination_latest to source, files deleted on source are moved
    to destination_previous
 
 ## System requirements
