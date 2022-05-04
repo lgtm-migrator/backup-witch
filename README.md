@@ -1,63 +1,37 @@
-> <h4 align="center">this is readme for v2, readme for v3 is in progress</h4>
-
 <h1 align="center" style="border-bottom: none;">backup-witch</h1>
 <h3 align="center">rclone backup automation tool</h3>
 
-**backup-witch** is an easily configurable and extendable backup script for performing regular
-automated backups of data from user home folder to remote destination.
+**backup-witch** is an easily configurable and extendable tool for performing continuous
+automated backup of data with rclone.
 
 Made with **rclone**, **python** and **bash**.
+
 ## How it works
 
-**backup-witch** performs backup in four steps.
+**backup-witch** performs backup in three step:
 
-1. Saves list of installed apps
-2. Saves list of all files, i.e. source directory structure
-3. Saves list of new files, i.e. a list of files for upload by current backup
-   + This list includes new files, as well as existing files, which were modified since last backup
-4. Runs *rclone copy* to copy files from source to backup destination
-
-## Script structure
-
-+ *main.py* - script start file
-+ *services.py* - contains code for script services
-+ *commands.py* - contains bash command composers, for every designated action
-+ *utils.py* - contains utility functions and classes
+1. Saves file, containing a list of installed apps (apt, snap, flatpak)
+2. Runs *rclone copy* to copy files from source to destination_latest, old versions of
+   files are moved to destination_previous
+3. Runs *rclone move* to match destination_latest to source, files deleted on source are moved
+   to destination_previous
 
 ## System requirements
 
-Any **Debian** based distro with several things installed, **if you don't want to modify the script**.
+Any **Linux** distro, supported by **rclone**, with several things installed:
 
-Otherwise, you can easily adjust **backup-witch** according to your use case and needs.
-Backup functionality most likely will work even on **Windows**.
++ For backup functionality:
+    + python3
+    + rclone
 
-### Dependencies
-
-For backup functionality: 
-+ python3
-+ rclone
-
-For generating a list of installed apps:
-+ snapd
-+ flatpak
-+ apt
-
-For notifying about errors:
-+ notify-send
++ For notifying about errors:
+    + notify-send
 
 ## Prerequisites
 
-You will need to have a properly configured rclone remote for backup destination.
+You will need to have a properly configured rclone remote to serve as backup destination.
 
 More info -> https://rclone.org/docs/
-
-Corresponding config option in *cmd_args.py* is BACKUP_WITCH_DESTINATION.
-
-Set this option to complete path of folder on remote, without trailing slash. For example: 
-
-```python
-BACKUP_WITCH_DESTINATION="dropbox:backup-witch" 
-```
 
 ## How to run
 
@@ -66,10 +40,22 @@ BACKUP_WITCH_DESTINATION="dropbox:backup-witch"
 To run **backup-witch**, first copy *sample_configs* folder to *src* folder and rename it to **configs**
 
 ```bash
-cp -r sample_configs src/configs
+cp -r sample_config src/config
 ```
 
-Then set appropriate configs, and modify any you wish to change.
+Then set appropriate rclone remote as backup destination.
+
+Corresponding config option will be in *src/config/paths.py*.
+
+Set this option to complete path of folder on remote, without trailing slash. For example:
+
+***src/config/paths.py***
+
+```python
+BACKUP_WITCH_DESTINATION = "dropbox:backup-witch" 
+```
+
+Now you can modify any other config options you wish to change.
 
 ### Plain run
 
