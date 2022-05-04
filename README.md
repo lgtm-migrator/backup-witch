@@ -11,10 +11,8 @@ Made with **python** and **bash**.
 **backup-witch** performs backup in three step:
 
 1. Saves file, containing a list of installed apps (apt, snap, flatpak)
-2. Runs ***rclone copy*** to copy files from source to destination_latest, old versions of
-   files are moved to destination_previous
-3. Runs ***rclone move*** to match destination_latest to source, files deleted on source are moved to
-   destination_previous
+2. Runs ***rclone copy*** to copy files from source to destination, old versions of files are moved to destination_previous
+4. Runs ***rclone move*** to match destination to source, files deleted on source are moved to destination_previous
 
 ## System requirements
 
