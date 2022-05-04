@@ -1,7 +1,7 @@
 import subprocess
 
 from src.bash_scripts import SaveListOfInstalledAppsScript, RcloneMatchDestinationToSourceScript, RcloneCopyFilesScript
-from utils import run_bash_script, State, rclone_log_contains_not_ignored_errors, Service, \
+from src.utils import run_bash_script, State, rclone_log_contains_not_ignored_errors, Service, \
     seconds_passed_from_time_stamp_till_now, \
     time_stamp
 
