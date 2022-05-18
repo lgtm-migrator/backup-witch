@@ -1,6 +1,10 @@
 <h1 align="center" style="border-bottom: none;">backup-witch</h1>
 <h3 align="center">rclone backup automation tool</h3>
 
+<p align="center">
+  <a href="https://lgtm.com/projects/g/ark-key/backup-witch/context:python"><img alt="Language grade: Python" src="https://img.shields.io/lgtm/grade/python/g/ark-key/backup-witch.svg?logo=lgtm&logoWidth=18"/></a>
+</p>
+
 **backup-witch** is an easily configurable and extendable tool for performing continuous
 automated backup of data with **rclone**.
 
