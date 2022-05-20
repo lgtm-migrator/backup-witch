@@ -4,7 +4,6 @@ from src.utils import run_bash_script, time_stamp
 
 
 def test(tmp_path):
-    assert 0
     source = tmp_path / 'source'
     destination_latest = tmp_path / 'destination' / 'latest'
     destination_previous = tmp_path / 'destination' / 'previous'
