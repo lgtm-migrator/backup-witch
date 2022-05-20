@@ -5,9 +5,12 @@
 /env/
 /node_modules/
 
+# cache
 __pycache__/
 /.pytest_cache/
 
-/src/config/
+# coverage reports
+/.coverage
+/coverage.xml
 
-/test/test-artifacts/
+/src/config/
