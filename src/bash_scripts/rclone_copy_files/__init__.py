@@ -1,4 +1,4 @@
-from src.utils import BashScript
+from src.utils.bash_utils import BashScript
 
 
 class RcloneCopyFilesScript(BashScript):

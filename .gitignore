@@ -1,16 +1,12 @@
-/.idea/
+.idea/
 
-/venv/
-
-/env/
-/node_modules/
-
-# cache
+venv/
 __pycache__/
-/.pytest_cache/
+.pytest_cache/
 
 # coverage reports
-/.coverage
-/coverage.xml
+.coverage
+coverage.xml
 
-/src/config/
+# user config file
+/src/config.py

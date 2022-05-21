@@ -6,8 +6,8 @@ from typing import Final
 
 
 class State:
-    def __init__(self, save_file_path: Path):
-        self._save_file_path = save_file_path
+    def __init__(self, save_file_path: str):
+        self._save_file_path = Path(save_file_path)
         self.data: Final[dict] = self._load_state_from_file() or {}
 
     def update_state(self, key: str, value: str):

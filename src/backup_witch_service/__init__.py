@@ -1,11 +1,16 @@
 import subprocess
 
-from src.bash_scripts import SaveListOfInstalledAppsScript, RcloneMatchDestinationToSourceScript, RcloneCopyFilesScript
-from src.utils import run_bash_script, State, rclone_log_contains_not_ignored_errors, Service, \
-    seconds_passed_from_time_stamp_till_now, \
-    time_stamp
+from src.bash_scripts.rclone_copy_files import RcloneCopyFilesScript
+from src.bash_scripts.rclone_match_destination_to_source import RcloneMatchDestinationToSourceScript
+from src.bash_scripts.save_list_of_installed_apps import SaveListOfInstalledAppsScript
+from src.core.service import Service
+from src.core.state import State
+from src.utils.bash_utils import run_bash_script
+from src.utils.misc_utils import rclone_log_contains_not_ignored_errors
+from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_stamp
 
 
+# todo switch to --filter-from
 class BackupWitchService(Service):
 
     def __init__(self,

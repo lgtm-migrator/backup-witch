@@ -1,8 +1,8 @@
 import asyncio
 from abc import ABC, abstractmethod
 
-from src.utils.service_state_manager import ServiceStateManager
-from src.utils.state import State
+from src.core.service_state_manager import ServiceStateManager
+from src.core.state import State
 from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_stamp
 
 

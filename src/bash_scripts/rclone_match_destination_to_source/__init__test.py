@@ -1,6 +1,8 @@
 import pytest
-from src.bash_scripts import RcloneMatchDestinationToSourceScript
-from src.utils import run_bash_script, time_stamp
+
+from src.bash_scripts.rclone_match_destination_to_source import RcloneMatchDestinationToSourceScript
+from src.utils.bash_utils import run_bash_script
+from src.utils.time_utils import time_stamp
 
 
 def test(tmp_path):
