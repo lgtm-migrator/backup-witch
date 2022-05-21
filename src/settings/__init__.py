@@ -18,9 +18,9 @@ class Configuration:
 
     NO_TRAVERSE_MAX_AGE: int = 86400  # seconds: 24 hours
 
-    RCLONE_FLAGS: list = field(default_factory=list)
+    RCLONE_FILTER_FLAGS: str = ''
 
-    RCLONE_FILTER: str = ''  # todo switch to --filter-from
+    RCLONE_ADDITIONAL_FLAGS: list = field(default_factory=list)
 
     PYTHON_LOG_FILE: str = BACKUP_WITCH_DATA_FOLDER + '/python.log',
 

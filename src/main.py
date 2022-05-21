@@ -24,11 +24,11 @@ async def main():
             backup_source=CONFIG.BACKUP_SOURCE,
             destination_latest=CONFIG.BACKUP_DESTINATION_LATEST,
             destination_previous=CONFIG.BACKUP_DESTINATION_PREVIOUS,
-            rclone_filter=CONFIG.RCLONE_FILTER,
+            rclone_filter_flags=CONFIG.RCLONE_FILTER_FLAGS,
             rclone_copy_log_file=CONFIG.RCLONE_COPY_LOG_FILE,
             rclone_match_log_file=CONFIG.RCLONE_MATCH_LOG_FILE,
             no_traverse_max_age=CONFIG.NO_TRAVERSE_MAX_AGE,
-            rclone_additional_flags=CONFIG.RCLONE_FLAGS,
+            rclone_additional_flags=CONFIG.RCLONE_ADDITIONAL_FLAGS,
             apps_list_output_file=CONFIG.APPS_LIST_FILE,
             ignore_permission_denied_errors_on_source=CONFIG.IGNORE_PERMISSION_DENIED_ERRORS_ON_SOURCE,
         )

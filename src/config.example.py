@@ -7,7 +7,7 @@ CONFIG = Configuration(
 
     BACKUP_DESTINATION_PREVIOUS='example-remote:@backup-witch/previous',
 
-    RCLONE_FLAGS=[
+    RCLONE_ADDITIONAL_FLAGS=[
         '--fast-list',
         '--drive-chunk-size 64M',
         '--transfers 10',

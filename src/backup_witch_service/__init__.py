@@ -10,7 +10,6 @@ from src.utils.misc_utils import rclone_log_contains_not_ignored_errors
 from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_stamp
 
 
-# todo switch to --filter-from
 class BackupWitchService(Service):
 
     def __init__(self,
@@ -21,7 +20,7 @@ class BackupWitchService(Service):
                  backup_source: str,
                  destination_latest: str,
                  destination_previous: str,
-                 rclone_filter: str,
+                 rclone_filter_flags: str,
                  rclone_copy_log_file: str,
                  rclone_match_log_file: str,
                  no_traverse_max_age: int,
@@ -35,7 +34,7 @@ class BackupWitchService(Service):
         self._backup_source = backup_source
         self._destination_latest = destination_latest
         self._destination_previous = destination_previous
-        self._rclone_filter = rclone_filter
+        self._rclone_filter_flags = rclone_filter_flags
         self._rclone_copy_log_file = rclone_copy_log_file
         self._rclone_match_log_file = rclone_match_log_file
         self._no_traverse_max_age = no_traverse_max_age
@@ -54,7 +53,7 @@ class BackupWitchService(Service):
         seconds_passed_from_last_backup_run_start = seconds_passed_from_time_stamp_till_now(
             self._state_manager.get('last_backup_run_start_time_stamp', '')
         )
-        rclone_copy_files_filter = f'--max-age {seconds_passed_from_last_backup_run_start}s {self._rclone_filter}'
+        rclone_copy_files_filter = f'--max-age {seconds_passed_from_last_backup_run_start}s {self._rclone_filter_flags}'
         rclone_additional_flags = self._rclone_additional_flags
         if seconds_passed_from_last_backup_run_start <= self._no_traverse_max_age:
             rclone_additional_flags += ' --no-traverse'
@@ -78,7 +77,7 @@ class BackupWitchService(Service):
                 self._destination_previous,
                 backup_run_start_time_stamp,
                 self._rclone_match_log_file,
-                self._rclone_filter,
+                self._rclone_filter_flags,
                 rclone_additional_flags
             )
         )
