@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 UNIX_HOME_FOLDER = Path('~/').expanduser().__str__()
@@ -18,7 +18,7 @@ class Configuration:
 
     NO_TRAVERSE_MAX_AGE: int = 86400  # seconds: 24 hours
 
-    RCLONE_FLAGS: str = ''  # todo switch to using a list of flags
+    RCLONE_FLAGS: list = field(default_factory=list)
 
     RCLONE_FILTER: str = ''  # todo switch to --filter-from
 

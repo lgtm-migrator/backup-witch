@@ -25,7 +25,7 @@ class BackupWitchService(Service):
                  rclone_copy_log_file: str,
                  rclone_match_log_file: str,
                  no_traverse_max_age: int,
-                 rclone_additional_flags: str,
+                 rclone_additional_flags: list,
                  apps_list_output_file: str,
                  *,
                  ignore_permission_denied_errors_on_source: bool = False,
@@ -39,7 +39,7 @@ class BackupWitchService(Service):
         self._rclone_copy_log_file = rclone_copy_log_file
         self._rclone_match_log_file = rclone_match_log_file
         self._no_traverse_max_age = no_traverse_max_age
-        self._rclone_additional_flags = rclone_additional_flags
+        self._rclone_additional_flags = ' '.join(rclone_additional_flags)
         self._apps_list_output_file = apps_list_output_file
         self._ignore_permission_denied_errors_on_source = ignore_permission_denied_errors_on_source
         self._ignore_partially_written_files_upload_errors = ignore_partially_written_files_upload_errors
