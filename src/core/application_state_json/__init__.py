@@ -13,7 +13,7 @@ class ApplicationStateJson(ApplicationState):
     __data: dict
     __initialized: bool = False
 
-    def __int__(self):
+    def __init__(self):
         raise RuntimeError('ApplicationState can\'t be instanced')
 
     @classmethod
