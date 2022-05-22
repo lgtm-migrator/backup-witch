@@ -1,0 +1,48 @@
+- venv/**
+- env/**
+- .flatpak-builder/**
+- node_modules/**
+- __pycache__/**
+- .Trash-1000/**
+- .cache/**
+- CachedData/**
+- Cache/**
+- Code Cache/**
+- Service Worker/**
+- GPUCache/**
+- GrShaderCache/**
+- ShaderCache/**
+- chromium/**
+- CypressCache/**
+
+- /.var/app/*/cache/**
+- /.local/share/gvfs-metadata/**
+- /.local/share/gnome-shell/application_state
+- /.local/share/recently-used.xbel
+- /.local/share/tracker/**
+- /.local/share/Trash/**
+
+# firefox-profile
++ /.mozilla/firefox/*/extensions.json
++ /.mozilla/firefox/*/extension-settings.json
++ /.mozilla/firefox/*/xulstore.json
++ /.mozilla/firefox/*/content-prefs.sqlite
++ /.mozilla/firefox/*/bookmarkbackups/**
++ /.mozilla/firefox/*/extensions/**
+# firefox-profile end
+
++ /.var/**  # flatpak apps data folder
++ /.config/**
++ /.gnupg/**
++ /.java/**
++ /.local/**
++ /.pki/**
++ /.ssh/**
+
+- /.*/** # exclude all other dot folders
+
++ /*/** # include all normal folders
+
++ /.* # include all dot files
+
+- ** # don't include anything else
