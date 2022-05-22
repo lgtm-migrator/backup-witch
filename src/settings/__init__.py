@@ -14,7 +14,7 @@ class Configuration:
 
     BACKUP_DESTINATION_PREVIOUS: str
 
-    LIST_APPS_AND_COPY_FILES_INTERVAL: int = 900  # seconds: 15 minutes
+    BACKUP_INTERVAL: int = 900  # seconds: 15 minutes
 
     NO_TRAVERSE_MAX_AGE: int = 86400  # seconds: 24 hours
 
@@ -34,4 +34,9 @@ class Configuration:
 
     IGNORE_PERMISSION_DENIED_ERRORS_ON_SOURCE: bool = True
 
+    IGNORE_PARTIALLY_WRITTEN_FILES_UPLOAD_ERRORS: bool = True
+
+
+@dataclass
+class RunOptions:
     DEBUG: bool = False

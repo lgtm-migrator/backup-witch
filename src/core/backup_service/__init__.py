@@ -5,6 +5,7 @@ from src.bash_scripts.rclone_match_destination_to_source import RcloneMatchDesti
 from src.bash_scripts.save_list_of_installed_apps import SaveListOfInstalledAppsScript
 from src.components.service import Service
 from src.components.state import State
+from src.settings import Configuration
 from src.utils.bash_utils import run_bash_script
 from src.utils.misc_utils import rclone_log_contains_not_ignored_errors
 from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_stamp
@@ -13,34 +14,20 @@ from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_s
 class BackupService(Service):
 
     def __init__(self,
-                 # region super args
-                 run_interval: int,
                  state: State,
-                 # endregion
-                 backup_source: str,
-                 destination_latest: str,
-                 destination_previous: str,
-                 rclone_filter_flags: str,
-                 rclone_copy_log_file: str,
-                 rclone_match_log_file: str,
-                 no_traverse_max_age: int,
-                 rclone_additional_flags: list,
-                 apps_list_output_file: str,
-                 *,
-                 ignore_permission_denied_errors_on_source: bool = False,
-                 ignore_partially_written_files_upload_errors: bool = True):
-        super().__init__(run_interval, state, 'backup-witch-service:')
-        self._backup_source = backup_source
-        self._destination_latest = destination_latest
-        self._destination_previous = destination_previous
-        self._rclone_filter_flags = rclone_filter_flags
-        self._rclone_copy_log_file = rclone_copy_log_file
-        self._rclone_match_log_file = rclone_match_log_file
-        self._no_traverse_max_age = no_traverse_max_age
-        self._rclone_additional_flags = ' '.join(rclone_additional_flags)
-        self._apps_list_output_file = apps_list_output_file
-        self._ignore_permission_denied_errors_on_source = ignore_permission_denied_errors_on_source
-        self._ignore_partially_written_files_upload_errors = ignore_partially_written_files_upload_errors
+                 config: Configuration):
+        super().__init__(config.BACKUP_INTERVAL, state, 'backup-witch-service:')
+        self._backup_source = config.BACKUP_SOURCE
+        self._destination_latest = config.BACKUP_DESTINATION_LATEST
+        self._destination_previous = config.BACKUP_DESTINATION_PREVIOUS
+        self._rclone_filter_flags = config.RCLONE_FILTER_FLAGS
+        self._rclone_copy_log_file = config.RCLONE_COPY_LOG_FILE
+        self._rclone_match_log_file = config.RCLONE_MATCH_LOG_FILE
+        self._no_traverse_max_age = config.NO_TRAVERSE_MAX_AGE
+        self._rclone_additional_flags = ' '.join(config.RCLONE_ADDITIONAL_FLAGS)
+        self._apps_list_output_file = config.APPS_LIST_FILE
+        self._ignore_permission_denied_errors_on_source = config.IGNORE_PERMISSION_DENIED_ERRORS_ON_SOURCE
+        self._ignore_partially_written_files_upload_errors = config.IGNORE_PARTIALLY_WRITTEN_FILES_UPLOAD_ERRORS
 
     async def _body(self):
         run_bash_script(
