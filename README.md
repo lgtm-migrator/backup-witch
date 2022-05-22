@@ -48,23 +48,14 @@ More info -> https://rclone.org/docs/
 
 ### Configure
 
-To run **backup-witch**, first copy *sample_configs* folder to *src* folder and rename it to **configs**
+To run **backup-witch**, first cd into *src* folder and create **config.py** configuration file from _config.example.py_
 
 ```bash
-cp -r sample_config src/config
+cd src
+cp config.example.py config.py
 ```
 
-Then set appropriate rclone remote as backup destination.
-
-Corresponding config option will be in *src/config/paths.py*.
-
-Set this option to complete path of folder on remote, without trailing slash. For example:
-
-```python
-BACKUP_WITCH_DESTINATION = "dropbox:backup-witch" 
-```
-
-Now you can modify any other config options you wish to change.
+Now edit config.py with your preferred text editor and configure **backup-witch** according to your needs.
 
 ### Plain run
 
@@ -87,3 +78,5 @@ And start it
 ```shell
 systemctl --user start backup-witch.service
 ```
+
+[//]: # (todo rclone filter flags + more details on configuration)

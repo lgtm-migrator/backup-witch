@@ -1,6 +1,8 @@
 import pytest
-from src.bash_scripts import RcloneMatchDestinationToSourceScript
-from src.utils import run_bash_script, time_stamp
+
+from src.bash_scripts.rclone_match_destination_to_source import RcloneMatchDestinationToSourceScript
+from src.utils.bash_utils import run_bash_script
+from src.utils.time_utils import time_stamp
 
 
 def test(tmp_path):
@@ -10,7 +12,7 @@ def test(tmp_path):
     t_stamp = time_stamp()
     log_file = source / 'rclone-match.log'
     test_file = 'test-file.txt'
-    filters = f'--include {test_file}'
+    filter_flags = f'--include {test_file}'
     additional_rclone_flags = pytest.testenv.RCLONE_FlAGS
     source.mkdir()
     destination_latest.mkdir(parents=True)
@@ -25,7 +27,7 @@ def test(tmp_path):
             backup_dir=destination_previous.__str__(),
             time_stamp=t_stamp,
             log_file=log_file.__str__(),
-            filters=filters,
+            filter_flags=filter_flags,
             additional_rclone_flags=additional_rclone_flags
         )
     )

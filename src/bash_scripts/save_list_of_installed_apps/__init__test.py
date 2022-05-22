@@ -1,5 +1,5 @@
-from src.bash_scripts import SaveListOfInstalledAppsScript
-from src.utils import run_bash_script
+from src.bash_scripts.save_list_of_installed_apps import SaveListOfInstalledAppsScript
+from src.utils.bash_utils import run_bash_script
 
 
 def test(tmp_path):
