@@ -2,7 +2,7 @@ import asyncio
 import logging
 import subprocess
 
-from src.components.state import State
+from src.core.application_state_json import ApplicationStateJson
 from src.core.backup_service import BackupService
 from src.settings import RunOptions
 from utils.misc_utils import LoggedException
@@ -23,9 +23,9 @@ logging.basicConfig(filename=CONFIG.PYTHON_LOG_FILE, level=logging.WARNING,
 
 async def main():
     try:
-        state = State(CONFIG.STATE_FILE)
+        ApplicationStateJson.init(CONFIG.STATE_FILE)
         backup_witch_service = BackupService(
-            state=state,
+            application_state=ApplicationStateJson,
             config=CONFIG
         )
         await backup_witch_service.run()

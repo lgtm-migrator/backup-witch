@@ -1,10 +1,11 @@
 import subprocess
+from typing import Type
 
 from src.bash_scripts.rclone_copy_files import RcloneCopyFilesScript
 from src.bash_scripts.rclone_match_destination_to_source import RcloneMatchDestinationToSourceScript
 from src.bash_scripts.save_list_of_installed_apps import SaveListOfInstalledAppsScript
-from src.components.service import Service
-from src.components.state import State
+from src.core.application_state import ApplicationState
+from src.core.service import Service
 from src.settings import Configuration
 from src.utils.bash_utils import run_bash_script
 from src.utils.misc_utils import rclone_log_contains_not_ignored_errors
@@ -14,9 +15,9 @@ from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_s
 class BackupService(Service):
 
     def __init__(self,
-                 state: State,
+                 application_state: Type[ApplicationState],
                  config: Configuration):
-        super().__init__(config.BACKUP_INTERVAL, state, 'backup-witch-service:')
+        super().__init__(config.BACKUP_INTERVAL, application_state, 'backup-service:')
         self._backup_source = config.BACKUP_SOURCE
         self._destination_latest = config.BACKUP_DESTINATION_LATEST
         self._destination_previous = config.BACKUP_DESTINATION_PREVIOUS
@@ -36,7 +37,7 @@ class BackupService(Service):
             )
         )
         seconds_passed_from_last_backup_run_start = seconds_passed_from_time_stamp_till_now(
-            self._state_manager.get('last_backup_run_start_time_stamp', '')
+            self._state.get('last_backup_run_start_time_stamp', '')
         )
         rclone_copy_files_filter = f'--max-age {seconds_passed_from_last_backup_run_start}s {self._rclone_filter_flags}'
         rclone_additional_flags = self._rclone_additional_flags
@@ -66,7 +67,7 @@ class BackupService(Service):
                 rclone_additional_flags
             )
         )
-        self._state_manager.set(
+        self._state.set(
             key='last_backup_run_start_time_stamp',
             value=backup_run_start_time_stamp
         )
