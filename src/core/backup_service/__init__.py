@@ -28,8 +28,7 @@ class BackupService(Service):
                  apps_list_output_file: str,
                  *,
                  ignore_permission_denied_errors_on_source: bool = False,
-                 ignore_partially_written_files_upload_errors: bool = True,
-                 ignore_missing_files: bool = True):
+                 ignore_partially_written_files_upload_errors: bool = True):
         super().__init__(run_interval, state, 'backup-witch-service:')
         self._backup_source = backup_source
         self._destination_latest = destination_latest
@@ -42,7 +41,6 @@ class BackupService(Service):
         self._apps_list_output_file = apps_list_output_file
         self._ignore_permission_denied_errors_on_source = ignore_permission_denied_errors_on_source
         self._ignore_partially_written_files_upload_errors = ignore_partially_written_files_upload_errors
-        self._ignore_missing_files = ignore_missing_files
 
     async def _body(self):
         run_bash_script(
@@ -88,8 +86,6 @@ class BackupService(Service):
 
     def _rclone_copy_files_error_handler(self, _: subprocess.CalledProcessError) -> bool:
         checks_for_not_ignored_errors = []
-        if self._ignore_missing_files:
-            checks_for_not_ignored_errors.append(lambda l, _: 'no such file or directory' not in l)
         if self._ignore_permission_denied_errors_on_source:
             checks_for_not_ignored_errors.append(lambda l, _: 'permission denied' not in l)
         if self._ignore_partially_written_files_upload_errors:
