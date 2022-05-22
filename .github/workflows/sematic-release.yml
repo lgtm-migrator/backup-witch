@@ -1,8 +1,9 @@
 name: semantic-release
 
-# this workflow only runs semantic-release, no testing, linting and such
-# it should be triggered only by pull request merge
-# for that master branch should be protected from direct push by branch protection rule
+# This workflow only runs semantic-release, no testing, linting and such.
+# It should be triggered only by merging up-to-date development branch.
+# To achieve that, master branch should have "Require a pull request before merging"
+# and "Require branches to be up to date before merging" protection rules enabled.
 
 on:
   push:
