@@ -8,6 +8,9 @@
   <a href="https://codecov.io/gh/ark-key/backup-witch">
     <img src="https://codecov.io/gh/ark-key/backup-witch/branch/master/graph/badge.svg?token=2A648Z07NO"/>
   </a>
+  <a>
+    <img src="https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10-blue"/>
+  </a>
 </p>
 
 **backup-witch** is an easily configurable and extendable tool for performing continuous
