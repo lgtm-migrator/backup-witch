@@ -2,8 +2,8 @@ import asyncio
 import logging
 import subprocess
 
-from backup_witch_service import BackupWitchService
-from core.state import State
+from src.components.state import State
+from src.core.backup_witch_service import BackupWitchService
 from utils.misc_utils import LoggedException
 
 try:
