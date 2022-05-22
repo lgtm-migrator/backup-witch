@@ -1,17 +1,19 @@
-name: pull-request
+name: test
 
 on:
+  push:
+    branches-ignore:
+      - master
   pull_request:
     branches:
       - master
-      - dev
 
 jobs:
-  pull-request:
+  test:
     runs-on: ubuntu-latest
 
     concurrency:
-      group: pull-request
+      group: test
       cancel-in-progress: false
 
     steps:
