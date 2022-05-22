@@ -1,4 +1,4 @@
-from src.core.state import State
+from src.components.state import State
 
 
 class ServiceStateManager:
