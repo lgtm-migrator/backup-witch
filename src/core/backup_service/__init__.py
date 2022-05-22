@@ -10,7 +10,7 @@ from src.utils.misc_utils import rclone_log_contains_not_ignored_errors
 from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_stamp
 
 
-class BackupWitchService(Service):
+class BackupService(Service):
 
     def __init__(self,
                  # region super args

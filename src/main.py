@@ -3,7 +3,7 @@ import logging
 import subprocess
 
 from src.components.state import State
-from src.core.backup_witch_service import BackupWitchService
+from src.core.backup_witch_service import BackupService
 from utils.misc_utils import LoggedException
 
 try:
@@ -18,7 +18,7 @@ logging.basicConfig(filename=CONFIG.PYTHON_LOG_FILE, level=logging.WARNING,
 async def main():
     try:
         state = State(CONFIG.STATE_FILE)
-        backup_witch_service = BackupWitchService(
+        backup_witch_service = BackupService(
             run_interval=CONFIG.LIST_APPS_AND_COPY_FILES_INTERVAL,
             state=state,
             backup_source=CONFIG.BACKUP_SOURCE,
