@@ -23,14 +23,7 @@ jobs:
           cache: 'pip'
           cache-dependency-path: 'requirements-dev.txt'
 
-      - name: Restore rclone bin from cache
-        uses: actions/cache@v3
-        with:
-          path: /usr/bin/rclone
-          key: ${{ runner.os }}-rclone
-
-      - name: Install or update rclone
-        # install.sh checks installed version of rclone to determine if update is necessary
+      - name: Install rclone
         run: curl https://rclone.org/install.sh | sudo bash
 
       - name: Install test dependencies
