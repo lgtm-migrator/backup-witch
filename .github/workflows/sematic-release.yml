@@ -10,13 +10,13 @@ on:
     branches:
       - master
 
+concurrency:
+  group: semantic-release
+  cancel-in-progress: true
+
 jobs:
   semantic-release:
     runs-on: ubuntu-latest
-
-    concurrency:
-      group: semantic-release
-      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@v2
