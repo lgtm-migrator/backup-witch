@@ -14,12 +14,12 @@ class ApplicationStateJson(ApplicationState):
     __initialized: bool = False
 
     def __init__(self):
-        raise RuntimeError('ApplicationState can\'t be instanced')
+        raise RuntimeError("ApplicationState can't be instanced")
 
     @classmethod
     def init(cls, save_file_path: str):
         if cls.__initialized:
-            raise RuntimeError('ApplicationState is already initialized')
+            raise RuntimeError("ApplicationState is already initialized")
         cls.__save_file_path = Path(save_file_path)
         cls.__data = cls._load_state_from_file() or {}
         cls.__initialized = True
@@ -43,6 +43,4 @@ class ApplicationStateJson(ApplicationState):
 
     @classmethod
     def _save_state_to_file(cls):
-        cls.__save_file_path.write_text(
-            json.dumps(cls.__data)
-        )
+        cls.__save_file_path.write_text(json.dumps(cls.__data))

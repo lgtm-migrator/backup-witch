@@ -6,23 +6,23 @@ from . import RcloneCopyFilesScript
 
 
 def test(tmp_path):
-    source = tmp_path / 'source'
-    destination_latest = tmp_path / 'destination' / 'latest'
-    destination_previous = tmp_path / 'destination' / 'previous'
+    source = tmp_path / "source"
+    destination_latest = tmp_path / "destination" / "latest"
+    destination_previous = tmp_path / "destination" / "previous"
     t_stamp = time_stamp()
-    log_file = source / 'rclone-copy.log'
-    test_file = 'test-file.txt'
-    filter_flags = f'--include {test_file}'
+    log_file = source / "rclone-copy.log"
+    test_file = "test-file.txt"
+    filter_flags = f"--include {test_file}"
     additional_rclone_flags = pytest.testenv.RCLONE_FlAGS
     source.mkdir()
     destination_latest.mkdir(parents=True)
-    test_file_on_source = source / f'{test_file}'
-    test_file_on_destination = destination_latest / f'{test_file}'
-    test_file_on_destination_content = 'DESTINATION'
+    test_file_on_source = source / f"{test_file}"
+    test_file_on_destination = destination_latest / f"{test_file}"
+    test_file_on_destination_content = "DESTINATION"
     test_file_on_destination.write_text(test_file_on_destination_content)
-    test_file_on_source_content = 'SOURCE'
+    test_file_on_source_content = "SOURCE"
     test_file_on_source.write_text(test_file_on_source_content)
-    test_file_on_backup_dir = destination_previous / f'{t_stamp}' / f'{test_file}'
+    test_file_on_backup_dir = destination_previous / f"{t_stamp}" / f"{test_file}"
     print(test_file_on_backup_dir.__str__())
     run_bash_script(
         RcloneCopyFilesScript(
@@ -32,7 +32,7 @@ def test(tmp_path):
             time_stamp=t_stamp,
             log_file=log_file.__str__(),
             filter_flags=filter_flags,
-            additional_rclone_flags=additional_rclone_flags
+            additional_rclone_flags=additional_rclone_flags,
         )
     )
     assert test_file_on_destination.exists()
