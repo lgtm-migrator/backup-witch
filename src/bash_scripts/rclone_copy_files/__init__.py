@@ -13,7 +13,7 @@ class RcloneCopyFilesScript(BashScript):
         additional_rclone_flags: str = "",
     ):
         code = f"""
-        set -o pipefail 
+        set -o pipefail
         rclone copy "{source}" "{destination}" \
         --backup-dir "{backup_dir}/{time_stamp}" \
         --links \
