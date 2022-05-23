@@ -8,9 +8,8 @@
   <a href="https://codecov.io/gh/ark-key/backup-witch">
     <img src="https://codecov.io/gh/ark-key/backup-witch/branch/master/graph/badge.svg?token=2A648Z07NO"/>
   </a>
-  <a>
-    <img src="https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10-blue"/>
-  </a>
+  <img src="https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10-blue"/>
+  <img src="https://github.com/ark-key/backup-witch/actions/workflows/flake8.yml/badge.svg"/>
   <a href="https://github.com/psf/black">
     <img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg">
   </a>
