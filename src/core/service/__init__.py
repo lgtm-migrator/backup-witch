@@ -8,10 +8,12 @@ from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_s
 
 
 class Service(ABC):
-    def __init__(self,
-                 run_interval: int,
-                 application_state: Type[ApplicationState],
-                 state_key_prefix: str):
+    def __init__(
+        self,
+        run_interval: int,
+        application_state: Type[ApplicationState],
+        state_key_prefix: str,
+    ):
         self._run_interval = run_interval
         self._state = ServiceState(application_state, state_key_prefix)
 
@@ -20,17 +22,14 @@ class Service(ABC):
             interval_delta = self._get_interval_delta()
             if interval_delta <= 0:
                 await self._body()
-                self._state.set(
-                    key='last_run_end_time_stamp',
-                    value=time_stamp()
-                )
+                self._state.set(key="last_run_end_time_stamp", value=time_stamp())
                 await asyncio.sleep(self._run_interval)
             else:
                 await asyncio.sleep(interval_delta)
 
     def _get_interval_delta(self) -> int:
         return self._run_interval - seconds_passed_from_time_stamp_till_now(
-            self._state.get('last_run_end_time_stamp', '')
+            self._state.get("last_run_end_time_stamp", "")
         )
 
     @abstractmethod

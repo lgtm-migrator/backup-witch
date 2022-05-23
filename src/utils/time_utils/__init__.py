@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 
 def time_stamp() -> str:
-    return datetime.now(timezone.utc).astimezone().isoformat(' ', 'seconds')
+    return datetime.now(timezone.utc).astimezone().isoformat(" ", "seconds")
 
 
 def seconds_passed_from_time_stamp_till_now(stamp: str) -> int:

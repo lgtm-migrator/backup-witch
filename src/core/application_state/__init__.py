@@ -5,7 +5,6 @@ from typing import Any
 
 
 class ApplicationState(ABC):
-
     @classmethod
     @abstractmethod
     def init(cls, *args, **kwargs):

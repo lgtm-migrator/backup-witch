@@ -17,16 +17,18 @@ try:
 except ImportError as err:
     raise RuntimeError('No config found. Check "How to run" section of readme') from err
 
-logging.basicConfig(filename=CONFIG.PYTHON_LOG_FILE, level=logging.WARNING,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    filename=CONFIG.PYTHON_LOG_FILE,
+    level=logging.WARNING,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
 
 
 async def main():
     try:
         ApplicationStateJson.init(CONFIG.STATE_FILE)
         backup_witch_service = BackupService(
-            application_state=ApplicationStateJson,
-            config=CONFIG
+            application_state=ApplicationStateJson, config=CONFIG
         )
         await backup_witch_service.run()
     except BaseException as e:
@@ -37,9 +39,10 @@ async def main():
         subprocess.run(
             f'notify-send "backup_witch" "Exception Occurred\nCheck log -> {CONFIG.PYTHON_LOG_FILE}" -u critical',
             shell=True,
-            check=False)
+            check=False,
+        )
         raise e
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     asyncio.run(main())
