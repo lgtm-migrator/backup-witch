@@ -8,13 +8,6 @@ on:
 jobs:
   black:
     runs-on: ubuntu-latest
-
-    concurrency:
-      group: black
-      cancel-in-progress: false
-
     steps:
       - uses: actions/checkout@v3
       - uses: psf/black@stable
-        with:
-          options: ""
