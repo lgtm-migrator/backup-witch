@@ -1,6 +1,5 @@
 import asyncio
-
-from typing_extensions import Type
+from typing import Type
 
 from src.core.application_state import ApplicationState
 from src.core.application_state_json import ApplicationStateJson
