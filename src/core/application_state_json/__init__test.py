@@ -6,10 +6,12 @@ from src.core.application_state_json import ApplicationStateJson
 
 
 def test(tmp_path):
+    with pytest.raises(RuntimeError):
+        ApplicationStateJson()
     state_save_file_path = tmp_path / "state.json"
     ApplicationStateJson.init(state_save_file_path.__str__())
     with pytest.raises(RuntimeError):
-        ApplicationStateJson()
+        ApplicationStateJson.init(state_save_file_path.__str__())
     assert state_save_file_path.exists()
     assert state_save_file_path.read_text() == ""
     new_object_key = "test-object"
