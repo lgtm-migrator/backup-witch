@@ -13,9 +13,6 @@ class ApplicationStateJson(ApplicationState):
     __data: dict
     __initialized: bool = False
 
-    def __init__(self):
-        raise RuntimeError("ApplicationState can't be instanced")
-
     @classmethod
     def init(cls, save_file_path: str):
         if cls.__initialized:
