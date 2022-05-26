@@ -16,7 +16,7 @@ class ApplicationStateJson(ApplicationState):
     @classmethod
     def init(cls, save_file_path: str):
         if cls.__initialized:
-            raise RuntimeError("ApplicationState is already initialized")
+            raise RuntimeError("ApplicationStateJson is already initialized")
         cls.__save_file_path = Path(save_file_path)
         cls.__data = cls._load_state_from_file() or {}
         cls.__initialized = True
