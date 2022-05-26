@@ -4,13 +4,7 @@ import subprocess
 
 from src.core.application_state_json import ApplicationStateJson
 from src.core.backup_service import BackupService
-from src.settings import RunOptions
 from utils.misc_utils import LoggedException
-
-try:
-    from config import RUN_OPTIONS
-except ImportError:
-    RUN_OPTIONS = RunOptions()
 
 try:
     from config import CONFIG
@@ -32,8 +26,6 @@ async def main():
         )
         await backup_witch_service.run()
     except BaseException as e:
-        if RUN_OPTIONS.DEBUG:
-            raise e
         if type(e) != LoggedException:
             logging.critical(repr(e))
         subprocess.run(
