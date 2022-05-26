@@ -37,3 +37,12 @@ async def test(tmp_path):
     service_run.cancel()
     expected_counter_value = initial_counter_value + system_run_time / run_interval
     assert count_service.get_value() == expected_counter_value
+    second_system_run_time = 1  # seconds
+    second_service_run = asyncio.create_task(count_service.run())
+    await asyncio.sleep(second_system_run_time)
+    second_service_run.cancel()
+    expected_counter_value = (
+        initial_counter_value
+        + (system_run_time + second_system_run_time) / run_interval
+    )
+    assert count_service.get_value() == expected_counter_value
