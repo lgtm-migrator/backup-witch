@@ -1,6 +1,7 @@
 pytest
 pytest-cov
 pytest-xdist
+pytest-asyncio
 black
 flake8
 flake8-for-pycharm
