@@ -1,6 +1,4 @@
-from src.settings import Configuration, UNIX_HOME_FOLDER, RunOptions
-
-RUN_OPTIONS = RunOptions(DEBUG=False)
+from src.settings import Configuration, UNIX_HOME_FOLDER
 
 CONFIG = Configuration(
     BACKUP_SOURCE=UNIX_HOME_FOLDER,

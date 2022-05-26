@@ -35,8 +35,3 @@ class Configuration:
     IGNORE_PERMISSION_DENIED_ERRORS_ON_SOURCE: bool = True
 
     IGNORE_PARTIALLY_WRITTEN_FILES_UPLOAD_ERRORS: bool = True
-
-
-@dataclass
-class RunOptions:
-    DEBUG: bool = False

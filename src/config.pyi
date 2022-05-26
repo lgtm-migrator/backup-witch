@@ -1,5 +1,3 @@
-from src.settings import Configuration, RunOptions
+from src.settings import Configuration
 
 CONFIG: Configuration
-
-RUN_OPTIONS: RunOptions
