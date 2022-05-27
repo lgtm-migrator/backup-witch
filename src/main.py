@@ -35,7 +35,7 @@ async def main(config: Configuration):
         raise e
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     try:
         from config import CONFIG
     except ImportError as err:
