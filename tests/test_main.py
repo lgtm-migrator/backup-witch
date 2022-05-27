@@ -21,7 +21,7 @@ async def test(tmp_path):
         BACKUP_DESTINATION_LATEST=backup_destination_latest.__str__(),
         BACKUP_DESTINATION_PREVIOUS=backup_destination_previous.__str__(),
         BACKUP_WITCH_DATA_FOLDER=backup_witch_data_folder.__str__(),
-        EXCEPTION_NOTIFY_COMMAND="exit 0",
+        # EXCEPTION_NOTIFY_COMMAND="exit 0",
     )
     with pytest.raises(asyncio.TimeoutError):
         await asyncio.wait_for(main(config), run_interval * 2)
