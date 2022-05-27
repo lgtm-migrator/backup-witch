@@ -1,7 +1,7 @@
 import subprocess
 from typing import Type
 
-from src.bash_scripts.rclone_copy_files import RcloneCopyFilesScript
+from src.bash_scripts.rclone_copy_files import RcloneCopyFilesToDestinationScript
 from src.bash_scripts.rclone_match_destination_to_source import (
     RcloneMatchDestinationToSourceScript,
 )
@@ -42,13 +42,31 @@ class BackupService(Service):
                 self._state.get("last_backup_run_start_time_stamp", "")
             )
         )
-        rclone_copy_files_filter = f"--max-age {seconds_passed_from_last_backup_run_start}s {self._rclone_filter_flags}"
         rclone_additional_flags = self._rclone_additional_flags
         if seconds_passed_from_last_backup_run_start <= self._no_traverse_max_age:
             rclone_additional_flags += " --no-traverse"
         backup_run_start_time_stamp = time_stamp()
+        self._copy_files_to_destination(
+            seconds_passed_from_last_backup_run_start,
+            backup_run_start_time_stamp,
+            rclone_additional_flags,
+        )
+        self._match_destination_to_source(
+            backup_run_start_time_stamp, rclone_additional_flags
+        )
+        self._state.set(
+            key="last_backup_run_start_time_stamp", value=backup_run_start_time_stamp
+        )
+
+    def _copy_files_to_destination(
+        self,
+        seconds_passed_from_last_backup_run_start: int,
+        backup_run_start_time_stamp: str,
+        rclone_additional_flags: str,
+    ):
+        rclone_copy_files_filter = f"--max-age {seconds_passed_from_last_backup_run_start}s {self._rclone_filter_flags}"
         run_bash_script(
-            RcloneCopyFilesScript(
+            RcloneCopyFilesToDestinationScript(
                 self._backup_source,
                 self._destination_latest,
                 self._destination_previous,
@@ -57,8 +75,14 @@ class BackupService(Service):
                 rclone_copy_files_filter,
                 rclone_additional_flags,
             ),
-            on_error_handler=self._rclone_copy_files_error_handler,
+            error_handler=self._rclone_copy_files_error_handler,
         )
+
+    def _match_destination_to_source(
+        self,
+        backup_run_start_time_stamp: str,
+        rclone_additional_flags: str,
+    ):
         run_bash_script(
             RcloneMatchDestinationToSourceScript(
                 self._backup_source,
@@ -70,13 +94,8 @@ class BackupService(Service):
                 rclone_additional_flags,
             )
         )
-        self._state.set(
-            key="last_backup_run_start_time_stamp", value=backup_run_start_time_stamp
-        )
 
-    def _rclone_copy_files_error_handler(
-        self, _: subprocess.CalledProcessError
-    ) -> bool:
+    def _rclone_copy_files_error_handler(self, err: subprocess.CalledProcessError):
         checks_for_not_ignored_errors = []
         if self._ignore_permission_denied_errors_on_source:
             checks_for_not_ignored_errors.append(
@@ -89,9 +108,11 @@ class BackupService(Service):
             checks_for_not_ignored_errors.append(
                 lambda _, f: "BadDigest" not in f.readline()
             )
-        if checks_for_not_ignored_errors:
+        if not checks_for_not_ignored_errors:
+            raise err
+        else:
             with open(self._rclone_copy_log_file) as file:
-                return rclone_log_contains_not_ignored_errors(
+                if rclone_log_contains_not_ignored_errors(
                     file, checks_for_not_ignored_errors
-                )
-        return True
+                ):
+                    raise err
