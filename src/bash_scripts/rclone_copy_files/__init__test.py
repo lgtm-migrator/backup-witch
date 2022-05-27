@@ -2,7 +2,7 @@ import pytest
 
 from src.utils.bash_utils import run_bash_script
 from src.utils.time_utils import time_stamp
-from . import RcloneCopyFilesScript
+from . import RcloneCopyFilesToDestinationScript
 
 
 def test(tmp_path):
@@ -25,7 +25,7 @@ def test(tmp_path):
     test_file_on_backup_dir = destination_previous / f"{t_stamp}" / f"{test_file}"
     print(test_file_on_backup_dir.__str__())
     run_bash_script(
-        RcloneCopyFilesScript(
+        RcloneCopyFilesToDestinationScript(
             source=source.__str__(),
             destination=destination_latest.__str__(),
             backup_dir=destination_previous.__str__(),

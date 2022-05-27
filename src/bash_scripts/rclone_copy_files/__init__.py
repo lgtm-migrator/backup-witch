@@ -1,7 +1,7 @@
 from src.utils.bash_utils import BashScript
 
 
-class RcloneCopyFilesScript(BashScript):
+class RcloneCopyFilesToDestinationScript(BashScript):
     def __init__(
         self,
         source: str,
@@ -22,4 +22,4 @@ class RcloneCopyFilesScript(BashScript):
         2>&1 \
         | tee "{log_file}"
         """
-        super().__init__("rclone-copy-files", code)
+        super().__init__("rclone-copy-files-to-destination", code)
