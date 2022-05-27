@@ -4,7 +4,6 @@ import subprocess
 
 from src.core.application_state_json import ApplicationStateJson
 from src.core.backup_service import BackupService
-from utils.misc_utils import LoggedException
 
 try:
     from config import CONFIG
@@ -21,13 +20,16 @@ logging.basicConfig(
 async def main():
     try:
         ApplicationStateJson.init(CONFIG.STATE_FILE)
-        backup_witch_service = BackupService(
+        backup_service = BackupService(
             application_state=ApplicationStateJson, config=CONFIG
         )
-        await backup_witch_service.run()
+        await backup_service.run()
     except BaseException as e:
-        if type(e) != LoggedException:
-            logging.critical(repr(e))
+        stderr = ""
+        if type(e) == subprocess.CalledProcessError:
+            e: subprocess.CalledProcessError
+            stderr = f"stderr:\n{e.stderr}\n"
+        logging.critical(f"repr(e):\n{repr(e)}\n{stderr}---")
         subprocess.run(
             f'notify-send "backup_witch" "Exception Occurred\nCheck log -> {CONFIG.PYTHON_LOG_FILE}" -u critical',
             shell=True,

@@ -57,7 +57,7 @@ class BackupService(Service):
                 rclone_copy_files_filter,
                 rclone_additional_flags,
             ),
-            on_error_handler=self._rclone_copy_files_error_handler,
+            error_handler=self._rclone_copy_files_error_handler,
         )
         run_bash_script(
             RcloneMatchDestinationToSourceScript(
