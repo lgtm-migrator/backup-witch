@@ -51,7 +51,7 @@ class Configuration:
 
         self.STATE_FILE: str = self.BACKUP_WITCH_DATA_FOLDER + "/state.json"
 
-        if not self.EXCEPTION_NOTIFY_COMMAND:
+        if not self.EXCEPTION_NOTIFY_COMMAND:  # pragma: no cover
             self.EXCEPTION_NOTIFY_COMMAND = (
                 f'notify-send "backup_witch" "Exception Occurred\n'
                 f'Check log -> {self.PYTHON_LOG_FILE}" -u critical '
