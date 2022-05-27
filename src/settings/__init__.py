@@ -3,8 +3,6 @@ from pathlib import Path
 
 UNIX_HOME_FOLDER = Path("~/").expanduser().__str__()
 
-BACKUP_WITCH_DATA_FOLDER = UNIX_HOME_FOLDER + "/.cache/backup-witch"
-
 
 @dataclass
 class Configuration:
@@ -22,16 +20,39 @@ class Configuration:
 
     RCLONE_ADDITIONAL_FLAGS: list = field(default_factory=list)
 
-    PYTHON_LOG_FILE: str = (BACKUP_WITCH_DATA_FOLDER + "/python.log",)
-
-    RCLONE_COPY_LOG_FILE: str = (BACKUP_WITCH_DATA_FOLDER + "/rclone-copy.log",)
-
-    RCLONE_MATCH_LOG_FILE: str = (BACKUP_WITCH_DATA_FOLDER + "/rclone-match.log",)
-
-    STATE_FILE: str = (BACKUP_WITCH_DATA_FOLDER + "/state.json",)
+    BACKUP_WITCH_DATA_FOLDER: str = UNIX_HOME_FOLDER + "/.cache/backup-witch"
 
     APPS_LIST_FILE: str = UNIX_HOME_FOLDER + "/.list-of-installed-apps.txt"
 
     IGNORE_PERMISSION_DENIED_ERRORS_ON_SOURCE: bool = True
 
     IGNORE_PARTIALLY_WRITTEN_FILES_UPLOAD_ERRORS: bool = True
+
+    EXCEPTION_NOTIFY_COMMAND: str = ""
+
+    PYTHON_LOG_FILE: str = field(init=False)
+
+    RCLONE_COPY_LOG_FILE: str = field(init=False)
+
+    RCLONE_MATCH_LOG_FILE: str = field(init=False)
+
+    STATE_FILE: str = field(init=False)
+
+    def __post_init__(self):
+        self.PYTHON_LOG_FILE: str = self.BACKUP_WITCH_DATA_FOLDER + "/python.log"
+
+        self.RCLONE_COPY_LOG_FILE: str = (
+            self.BACKUP_WITCH_DATA_FOLDER + "/rclone-copy.log"
+        )
+
+        self.RCLONE_MATCH_LOG_FILE: str = (
+            self.BACKUP_WITCH_DATA_FOLDER + "/rclone-match.log"
+        )
+
+        self.STATE_FILE: str = self.BACKUP_WITCH_DATA_FOLDER + "/state.json"
+
+        if not self.EXCEPTION_NOTIFY_COMMAND:
+            self.EXCEPTION_NOTIFY_COMMAND = (
+                f'notify-send "backup_witch" "Exception Occurred\n'
+                f'Check log -> {self.PYTHON_LOG_FILE}" -u critical '
+            )
