@@ -36,6 +36,14 @@ async def test(tmp_path):
     count_service = CountService(
         run_interval, ApplicationStateJson, initial_counter_value, counter_step
     )
+    with pytest.raises(asyncio.TimeoutError):
+        # make service body run for less than a run_interval to create time delta
+        await asyncio.wait_for(count_service.run(), run_interval - 1)
+    counter_value_after_first_run = count_service.get_value()
+    assert counter_value_after_first_run == initial_counter_value + counter_step
+    with pytest.raises(asyncio.TimeoutError):
+        await asyncio.wait_for(count_service.run(), run_interval)
+    assert count_service.get_value() == counter_value_after_first_run + counter_step
     run_process = asyncio.create_task(count_service.run())
     with pytest.raises(RuntimeError):
         # test that exception is thrown, when trying to run already running service
@@ -45,11 +53,3 @@ async def test(tmp_path):
         await run_process
     except asyncio.CancelledError:
         pass
-    with pytest.raises(asyncio.TimeoutError):
-        # make service body run for less than a run_interval to create time delta
-        await asyncio.wait_for(count_service.run(), run_interval - 1)
-    counter_value_after_first_run = count_service.get_value()
-    assert counter_value_after_first_run == initial_counter_value + counter_step
-    with pytest.raises(asyncio.TimeoutError):
-        await asyncio.wait_for(count_service.run(), run_interval)
-    assert count_service.get_value() == counter_value_after_first_run + counter_step
