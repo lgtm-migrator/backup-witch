@@ -1,5 +1,4 @@
 import subprocess
-from typing import Type
 
 from src.bash_scripts.rclone_copy_files import RcloneCopyFilesToDestinationScript
 from src.bash_scripts.rclone_match_destination_to_source import (
@@ -15,18 +14,16 @@ from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_s
 
 
 class BackupService(Service):
-    def __init__(
-        self, application_state: Type[ApplicationState], config: Configuration
-    ):
+    def __init__(self, application_state: ApplicationState, config: Configuration):
         super().__init__(config.BACKUP_INTERVAL, application_state, "backup-service:")
         self._backup_source = config.BACKUP_SOURCE
         self._destination_latest = config.BACKUP_DESTINATION_LATEST
         self._destination_previous = config.BACKUP_DESTINATION_PREVIOUS
-        self._rclone_filter_flags = config.RCLONE_FILTER_FLAGS
+        self._rclone_filter_flags = config.RCLONE_FILTER_FLAGS_STR
         self._rclone_copy_log_file = config.RCLONE_COPY_LOG_FILE
         self._rclone_match_log_file = config.RCLONE_MATCH_LOG_FILE
         self._no_traverse_max_age = config.NO_TRAVERSE_MAX_AGE
-        self._rclone_additional_flags = " ".join(config.RCLONE_ADDITIONAL_FLAGS)
+        self._rclone_additional_flags = config.RCLONE_ADDITIONAL_FLAGS_STR
         self._apps_list_output_file = config.APPS_LIST_FILE
         self._ignore_permission_denied_errors_on_source = (
             config.IGNORE_PERMISSION_DENIED_ERRORS_ON_SOURCE
@@ -36,7 +33,8 @@ class BackupService(Service):
         )
 
     async def _body(self):
-        run_bash_script(SaveListOfInstalledAppsScript(self._apps_list_output_file))
+        if self._apps_list_output_file:
+            run_bash_script(SaveListOfInstalledAppsScript(self._apps_list_output_file))
         seconds_passed_from_last_backup_run_start = (
             seconds_passed_from_time_stamp_till_now(
                 self._state.get("last_backup_run_start_time_stamp", "")

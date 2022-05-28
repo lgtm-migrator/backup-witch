@@ -15,7 +15,7 @@ def test(tmp_path):
     log_file = source / "rclone-match.log"
     test_file = "test-file.txt"
     filter_flags = f"--include {test_file}"
-    additional_rclone_flags = pytest.testenv.RCLONE_FlAGS
+    additional_rclone_flags = pytest.testenv.RCLONE_FlAGS_STR
     source.mkdir()
     destination_latest.mkdir(parents=True)
     test_file_on_destination = destination_latest / f"{test_file}"

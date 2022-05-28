@@ -2,9 +2,9 @@ from src.settings import Configuration, UNIX_HOME_FOLDER
 
 CONFIG = Configuration(
     BACKUP_SOURCE=UNIX_HOME_FOLDER,
-    BACKUP_DESTINATION_LATEST="example-remote:@backup-witch/latest",
-    BACKUP_DESTINATION_PREVIOUS="example-remote:@backup-witch/previous",
-    RCLONE_ADDITIONAL_FLAGS=[
+    BACKUP_DESTINATION="example-remote:@backup-witch",
+    RCLONE_FILTER_FLAGS_LIST=["--links"],
+    RCLONE_ADDITIONAL_FLAGS_LIST=[
         "--fast-list",
         "--drive-chunk-size 64M",
         "--transfers 10",
