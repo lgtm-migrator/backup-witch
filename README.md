@@ -32,9 +32,7 @@ On backup destination **backup-witch** creates two folders: latest and previous.
 to the backup destination (the latest snapshot of data). _previous_ - is the folder, where previous version of files, as
 well as deleted files, reside.
 
-By default, backup source is the user _home_ folder. Because of that, before performing backup **backup-witch**
-creates a txt file, containing a list of installed apps (apt, snap,
-flatpak). This file can later be used during restore process to install all apps, that were present on system.
+**backup-witch** also generates a txt file, containing a list of installed apps (apt, snap, flatpak), which can be used during restore process to install all apps, that were present on system. This feature is optional.
 
 ## Dependencies
 
