@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 from abc import ABC, abstractmethod
-from typing import Type
 
 from src.core.application_state import ApplicationState
 from src.core.service_state import ServiceState
@@ -13,7 +12,7 @@ class Service(ABC):
     def __init__(
         self,
         run_interval: int,
-        application_state: Type[ApplicationState],
+        application_state: ApplicationState,
         state_key_prefix: str,
     ):
         self._run_interval = run_interval

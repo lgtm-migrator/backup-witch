@@ -1,25 +1,18 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import Any, final
+from typing import Any
+
+from src.core.application_state_provider import ApplicationStateProvider
 
 
-class ApplicationState(ABC):
-    @final
-    def __init__(self):
-        raise RuntimeError("ApplicationState can't be instanced")
+class ApplicationState:
+    def __init__(self, provider: ApplicationStateProvider):
+        self._provider = provider
+        self._data = provider.load_state({})
 
-    @classmethod
-    @abstractmethod
-    def init(cls, *args, **kwargs):
-        pass
+    def set(self, key: str, value: str):
+        self._data[key] = value
+        self._provider.save_state(self._data)
 
-    @classmethod
-    @abstractmethod
-    def set(cls, key: str, value: str):
-        pass
-
-    @classmethod
-    @abstractmethod
-    def get(cls, key: str, default_value: Any):
-        pass
+    def get(self, key: str, default_value: Any):
+        return self._data.get(key, default_value)

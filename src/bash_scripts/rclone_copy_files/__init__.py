@@ -14,9 +14,8 @@ class RcloneCopyFilesToDestinationScript(BashScript):
     ):
         code = f"""
         set -o pipefail
-        rclone copy "{source}" "{destination}" \
+        rclone copy -vv "{source}" "{destination}" \
         --backup-dir "{backup_dir}/{time_stamp}" \
-        --links \
         {filter_flags} \
         {additional_rclone_flags}\
         2>&1 \

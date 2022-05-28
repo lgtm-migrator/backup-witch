@@ -1,10 +1,9 @@
 import asyncio
-from typing import Type
 
 import pytest
 
 from src.core.application_state import ApplicationState
-from src.core.application_state_json import ApplicationStateJson
+from src.core.application_state_provider_json import ApplicationStateProviderJSON
 from src.core.service import Service
 
 
@@ -12,7 +11,7 @@ class CountService(Service):
     def __init__(
         self,
         run_interval: int,
-        application_state: Type[ApplicationState],
+        application_state: ApplicationState,
         initial_value: int,
         step: int,
     ):
@@ -29,12 +28,14 @@ class CountService(Service):
 
 async def test(tmp_path):
     state_save_file_path = tmp_path / "state.json"
-    ApplicationStateJson.init(state_save_file_path.__str__())
+    application_state = ApplicationState(
+        ApplicationStateProviderJSON(state_save_file_path.__str__())
+    )
     run_interval = 2  # seconds
     initial_counter_value = 0
     counter_step = 1
     count_service = CountService(
-        run_interval, ApplicationStateJson, initial_counter_value, counter_step
+        run_interval, application_state, initial_counter_value, counter_step
     )
     with pytest.raises(asyncio.TimeoutError):
         # make service body run for less than a run_interval to create time delta

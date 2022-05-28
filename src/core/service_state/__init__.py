@@ -1,10 +1,8 @@
-from typing import Type
-
 from src.core.application_state import ApplicationState
 
 
 class ServiceState:
-    def __init__(self, application_state: Type[ApplicationState], key_prefix: str):
+    def __init__(self, application_state: ApplicationState, key_prefix: str):
         self._application_state = application_state
         self._key_prefix = key_prefix
 
