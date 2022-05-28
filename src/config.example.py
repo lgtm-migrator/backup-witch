@@ -1,4 +1,4 @@
-from src.settings import Configuration, UNIX_HOME_FOLDER
+from src.settings import UNIX_HOME_FOLDER, Configuration
 
 CONFIG = Configuration(
     BACKUP_SOURCE=UNIX_HOME_FOLDER,
