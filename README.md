@@ -39,7 +39,6 @@ well as deleted files, reside.
 + bash
 + python3
 + rclone
-+ notify-send (for notifying about errors)
 
 ## System requirements
 
