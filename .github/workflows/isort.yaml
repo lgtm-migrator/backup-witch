@@ -22,4 +22,4 @@ jobs:
           pip install -r requirements-dev.txt
 
       - name: Lint with isort
-        run: isort .
+        run: isort --check-only --diff .
