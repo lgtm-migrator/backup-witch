@@ -1,4 +1,8 @@
+from __future__ import annotations
+
 import subprocess
+from pathlib import Path
+from typing import Callable
 
 from src.bash_scripts.rclone_copy_files import RcloneCopyFilesToDestinationScript
 from src.bash_scripts.rclone_match_destination_to_source import (
@@ -9,10 +13,6 @@ from src.core.application_state import ApplicationState
 from src.core.service import Service
 from src.settings import Configuration
 from src.utils.bash_utils import run_bash_script
-from src.utils.misc_utils import (
-    RcloneLogFileIsEmptyError,
-    rclone_log_contains_not_ignored_errors,
-)
 from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_stamp
 
 
@@ -34,6 +34,13 @@ class BackupService(Service):
         self._ignore_partially_written_files_upload_errors = (
             config.IGNORE_PARTIALLY_WRITTEN_FILES_UPLOAD_ERRORS
         )
+        self._checkers_for_ignored_errors: list[Callable[[str], bool]] = []
+        if self._ignore_permission_denied_errors_on_source:
+            self._checkers_for_ignored_errors.append(lambda l: "permission denied" in l)
+        if self._ignore_partially_written_files_upload_errors:
+            self._checkers_for_ignored_errors.append(
+                lambda l: "source file is being updated" in l
+            )
 
     async def _body(self):
         if self._apps_list_output_file:
@@ -97,24 +104,29 @@ class BackupService(Service):
         )
 
     def _rclone_copy_files_error_handler(self, err: subprocess.CalledProcessError):
-        checks_for_not_ignored_errors = []
-        if self._ignore_permission_denied_errors_on_source:
-            checks_for_not_ignored_errors.append(
-                lambda l, _: "permission denied" not in l
-            )
-        if self._ignore_partially_written_files_upload_errors:
-            checks_for_not_ignored_errors.append(
-                lambda l, _: "source file is being updated" not in l
-            )
-            checks_for_not_ignored_errors.append(
-                lambda _, f: "BadDigest" not in f.readline()
-            )
-        if not checks_for_not_ignored_errors:
+        if not self._checkers_for_ignored_errors:
             raise err
         try:
-            if rclone_log_contains_not_ignored_errors(
-                self._rclone_copy_log_file, checks_for_not_ignored_errors
-            ):
+            if self._rclone_log_contains_not_ignored_errors():
                 raise err
         except RcloneLogFileIsEmptyError:
             raise err
+
+    def _rclone_log_contains_not_ignored_errors(self) -> bool:
+        log_file_contains_unparseable_error = True
+        if Path(self._rclone_copy_log_file).stat().st_size == 0:
+            raise RcloneLogFileIsEmptyError
+        with open(self._rclone_copy_log_file) as log_file:
+            for line in log_file:
+                if "ERROR" in line and "Can't retry any of the errors" not in line:
+                    log_file_contains_unparseable_error = False
+                    if not any(
+                        is_ignored(line)
+                        for is_ignored in self._checkers_for_ignored_errors
+                    ):
+                        return True
+        return log_file_contains_unparseable_error
+
+
+class RcloneLogFileIsEmptyError(Exception):
+    pass
