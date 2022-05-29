@@ -10,8 +10,8 @@ from src.core.service import Service
 from src.settings import Configuration
 from src.utils.bash_utils import run_bash_script
 from src.utils.misc_utils import (
-    rclone_log_contains_not_ignored_errors,
     RcloneLogFileIsEmptyError,
+    rclone_log_contains_not_ignored_errors,
 )
 from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_stamp
 
