@@ -18,7 +18,7 @@ class RcloneMatchDestinationToSourceScript(BashScript):
         files_to_move=$(comm -13 <(sort <(echo -e "$source_listing")) <(sort <(echo -e "$destination_listing")))
         if [[ $files_to_move ]]; then
             set -o pipefail
-            rclone move -vv "{destination}" "{backup_dir}/{time_stamp}" \
+            rclone move "{destination}" "{backup_dir}/{time_stamp}" \
             --files-from-raw <(echo -e "$files_to_move") \
             {additional_rclone_flags}\
             2>&1 \
