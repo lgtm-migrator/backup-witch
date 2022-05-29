@@ -14,6 +14,5 @@ CONFIG = Configuration(
         "--stats 1m",
         "--log-level INFO",
         "--stats-file-name-length 0",
-        "--retries 1",
     ],
 )
