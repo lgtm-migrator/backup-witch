@@ -14,6 +14,7 @@ StartLimitBurst=5
 [Service]
 Type=exec
 Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONPATH=${SCRIPT_DIR}
 
 Restart=on-failure
 RestartSec=60s
