@@ -1,4 +1,5 @@
 import subprocess
+from pathlib import Path
 
 from src.bash_scripts.rclone_copy_files import RcloneCopyFilesToDestinationScript
 from src.bash_scripts.rclone_match_destination_to_source import (
@@ -94,6 +95,8 @@ class BackupService(Service):
         )
 
     def _rclone_copy_files_error_handler(self, err: subprocess.CalledProcessError):
+        if Path(self._rclone_copy_log_file).stat().st_size == 0:
+            raise err
         checks_for_not_ignored_errors = []
         if self._ignore_permission_denied_errors_on_source:
             checks_for_not_ignored_errors.append(
@@ -108,9 +111,8 @@ class BackupService(Service):
             )
         if not checks_for_not_ignored_errors:
             raise err
-        else:
-            with open(self._rclone_copy_log_file) as file:
-                if rclone_log_contains_not_ignored_errors(
-                    file, checks_for_not_ignored_errors
-                ):
-                    raise err
+        with open(self._rclone_copy_log_file) as file:
+            if rclone_log_contains_not_ignored_errors(
+                file, checks_for_not_ignored_errors
+            ):
+                raise err
