@@ -146,3 +146,13 @@ async def test_with_no_errors_ignore(utils):
     symlink_to_root.symlink_to("/root")
     with pytest.raises(subprocess.CalledProcessError):
         await main(config)
+
+
+async def test_invalid_argument_error(utils):
+    config = utils.config(
+        RCLONE_FILTER_FLAGS_LIST=["--filter-from />.folder/filter.txt"]
+    )
+    paths = utils.paths(config)
+    utils.bootstrap_env(paths)
+    with pytest.raises(subprocess.CalledProcessError):
+        await main(config)
