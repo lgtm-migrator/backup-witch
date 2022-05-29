@@ -156,3 +156,11 @@ async def test_invalid_argument_error(utils):
     utils.bootstrap_env(paths)
     with pytest.raises(subprocess.CalledProcessError):
         await main(config)
+
+
+async def test_special_rclone_error_handling(utils):
+    config = utils.config(RCLONE_ADDITIONAL_FLAGS_LIST=["-vv", "--log-level INFO"])
+    paths = utils.paths(config)
+    utils.bootstrap_env(paths)
+    with pytest.raises(subprocess.CalledProcessError):
+        await main(config)
