@@ -63,10 +63,6 @@ cp config.example.py config.py
 
 Now edit config.py with your preferred text editor and configure **backup-witch** according to your needs.
 
-### Plain run
-
-Use _main.py_ to run **backup-witch**.
-
 ### Running as systemd service
 
 To run **backup-witch** as **systemd** service use provided utility script _systemd-init.sh_
@@ -84,5 +80,15 @@ And start it
 ```shell
 systemctl --user start backup-witch.service
 ```
+
+### Running manually
+
+_systemd-init.sh_ sets PYTHONPATH for backup-witch.service to **backup-witch** app folder.
+
+It is also automatically set, if running from **PyCharm IDE**.
+
+You will have to set PYTHONPATH to **backup-witch** app folder yourself, if you want to run **backup-witch**, for example, from terminal.
+
+Use _main.py_ to run **backup-witch**.
 
 [//]: # (todo rclone filter flags + more details on configuration)
