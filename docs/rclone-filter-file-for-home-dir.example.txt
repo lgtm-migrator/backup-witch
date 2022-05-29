@@ -31,7 +31,9 @@
 + /.mozilla/firefox/*/extensions/**
 # firefox-profile end
 
-+ /.var/**  # flatpak apps data folder
+# flatpak apps data folder
++ /.var/**
+
 + /.config/**
 + /.gnupg/**
 + /.java/**
@@ -39,10 +41,11 @@
 + /.pki/**
 + /.ssh/**
 
-- /.*/** # exclude all other dot folders
+# include all normal folders
++ /[^.]*/**
 
-+ /*/** # include all normal folders
+# include all dot files
++ /.*
 
-+ /.* # include all dot files
-
-- ** # don't include anything else
+# don't include anything else
+- **
