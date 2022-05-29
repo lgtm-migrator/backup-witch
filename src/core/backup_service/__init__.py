@@ -1,5 +1,4 @@
 import subprocess
-from pathlib import Path
 
 from src.bash_scripts.rclone_copy_files import RcloneCopyFilesToDestinationScript
 from src.bash_scripts.rclone_match_destination_to_source import (
@@ -10,7 +9,10 @@ from src.core.application_state import ApplicationState
 from src.core.service import Service
 from src.settings import Configuration
 from src.utils.bash_utils import run_bash_script
-from src.utils.misc_utils import rclone_log_contains_not_ignored_errors
+from src.utils.misc_utils import (
+    RcloneLogFileIsEmptyError,
+    rclone_log_contains_not_ignored_errors,
+)
 from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_stamp
 
 
@@ -95,8 +97,6 @@ class BackupService(Service):
         )
 
     def _rclone_copy_files_error_handler(self, err: subprocess.CalledProcessError):
-        if Path(self._rclone_copy_log_file).stat().st_size == 0:
-            raise err
         checks_for_not_ignored_errors = []
         if self._ignore_permission_denied_errors_on_source:
             checks_for_not_ignored_errors.append(
@@ -111,8 +111,10 @@ class BackupService(Service):
             )
         if not checks_for_not_ignored_errors:
             raise err
-        with open(self._rclone_copy_log_file) as file:
+        try:
             if rclone_log_contains_not_ignored_errors(
-                file, checks_for_not_ignored_errors
+                self._rclone_copy_log_file, checks_for_not_ignored_errors
             ):
                 raise err
+        except RcloneLogFileIsEmptyError:
+            raise err

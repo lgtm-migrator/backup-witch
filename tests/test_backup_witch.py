@@ -149,9 +149,19 @@ async def test_with_no_errors_ignore(utils):
 
 
 async def test_invalid_argument_error(utils):
+    # covers empty rclone log file case of rclone_log_contains_not_ignored_errors
     config = utils.config(
         RCLONE_FILTER_FLAGS_LIST=["--filter-from />.folder/filter.txt"]
     )
+    paths = utils.paths(config)
+    utils.bootstrap_env(paths)
+    with pytest.raises(subprocess.CalledProcessError):
+        await main(config)
+
+
+async def test_unparseable_rclone_error_handling(utils):
+    # covers unparseable rclone error case of rclone_log_contains_not_ignored_errors
+    config = utils.config(RCLONE_ADDITIONAL_FLAGS_LIST=["-vv", "--log-level INFO"])
     paths = utils.paths(config)
     utils.bootstrap_env(paths)
     with pytest.raises(subprocess.CalledProcessError):
