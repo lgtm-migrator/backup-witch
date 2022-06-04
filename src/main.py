@@ -3,9 +3,9 @@ import logging
 import subprocess
 from pathlib import Path
 
-from src.core.application_state import ApplicationState
-from src.core.application_state_provider_json import ApplicationStateProviderJSON
 from src.core.backup_service import BackupService
+from src.lib.application_state import ApplicationState
+from src.lib.application_state_provider_json import ApplicationStateProviderJSON
 from src.settings import Configuration
 
 

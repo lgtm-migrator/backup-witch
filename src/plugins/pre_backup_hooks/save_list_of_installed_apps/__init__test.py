@@ -1,4 +1,6 @@
-from src.bash_scripts.save_list_of_installed_apps import SaveListOfInstalledAppsScript
+from src.plugins.pre_backup_hooks.save_list_of_installed_apps import (
+    SaveListOfInstalledAppsScript,
+)
 from src.utils.bash_utils import run_bash_script
 
 

@@ -1,6 +1,6 @@
 import json
 
-from src.core.application_state_provider_json import ApplicationStateProviderJSON
+from src.lib.application_state_provider_json import ApplicationStateProviderJSON
 
 test_state = {"test_object_key": "test-object", "test_object_value": "test-value"}
 

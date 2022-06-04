@@ -1,6 +1,6 @@
 import pytest
 
-from src.bash_scripts.rclone_match_destination_to_source import (
+from src.core.rclone_match_destination_to_source import (
     RcloneMatchDestinationToSourceScript,
 )
 from src.utils.bash_utils import run_bash_script

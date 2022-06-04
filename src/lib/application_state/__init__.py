@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from src.core.application_state_provider import ApplicationStateProvider
+from src.lib.application_state_provider import ApplicationStateProvider
 
 
 class ApplicationState:

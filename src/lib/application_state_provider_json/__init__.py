@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from src.core.application_state_provider import ApplicationStateProvider
+from src.lib.application_state_provider import ApplicationStateProvider
 
 
 class ApplicationStateProviderJSON(ApplicationStateProvider):

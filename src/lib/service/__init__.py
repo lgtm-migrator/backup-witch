@@ -3,8 +3,8 @@ from __future__ import annotations
 import asyncio
 from abc import ABC, abstractmethod
 
-from src.core.application_state import ApplicationState
-from src.core.service_state import ServiceState
+from src.lib.application_state import ApplicationState
+from src.lib.service_state import ServiceState
 from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_stamp
 
 

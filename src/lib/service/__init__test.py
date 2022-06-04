@@ -2,9 +2,9 @@ import asyncio
 
 import pytest
 
-from src.core.application_state import ApplicationState
-from src.core.application_state_provider_json import ApplicationStateProviderJSON
-from src.core.service import Service
+from src.lib.application_state import ApplicationState
+from src.lib.application_state_provider_json import ApplicationStateProviderJSON
+from src.lib.service import Service
 
 
 class CountService(Service):

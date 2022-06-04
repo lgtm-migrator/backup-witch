@@ -1,6 +1,6 @@
-from src.core.application_state import ApplicationState
-from src.core.application_state_provider_json import ApplicationStateProviderJSON
-from src.core.service_state import ServiceState
+from src.lib.application_state import ApplicationState
+from src.lib.application_state_provider_json import ApplicationStateProviderJSON
+from src.lib.service_state import ServiceState
 
 
 def test(tmp_path):

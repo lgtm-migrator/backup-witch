@@ -4,13 +4,15 @@ import subprocess
 from pathlib import Path
 from typing import Callable
 
-from src.bash_scripts.rclone_copy_files import RcloneCopyFilesToDestinationScript
-from src.bash_scripts.rclone_match_destination_to_source import (
+from src.plugins.pre_backup_hooks.save_list_of_installed_apps import (
+    SaveListOfInstalledAppsScript,
+)
+from src.core.rclone_copy_files import RcloneCopyFilesToDestinationScript
+from src.core.rclone_match_destination_to_source import (
     RcloneMatchDestinationToSourceScript,
 )
-from src.bash_scripts.save_list_of_installed_apps import SaveListOfInstalledAppsScript
-from src.core.application_state import ApplicationState
-from src.core.service import Service
+from src.lib.application_state import ApplicationState
+from src.lib.service import Service
 from src.settings import Configuration
 from src.utils.bash_utils import run_bash_script
 from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_stamp

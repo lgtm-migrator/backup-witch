@@ -1,4 +1,4 @@
-from src.core.application_state import ApplicationState
+from src.lib.application_state import ApplicationState
 
 
 class ServiceState:
