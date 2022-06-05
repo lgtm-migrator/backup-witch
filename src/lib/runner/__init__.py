@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Protocol, Callable
+from typing import Callable, Protocol
 
 
 class Runner(Protocol):
