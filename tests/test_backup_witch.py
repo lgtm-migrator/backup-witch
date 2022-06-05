@@ -222,3 +222,11 @@ def test_backup_interval_invalid_error(utils):
         utils.config(
             BACKUP_INTERVAL=0,
         )
+
+
+def test_prohibited_rclone_flags_error(utils):
+    with pytest.raises(RuntimeError):
+        utils.config(
+            RCLONE_ADDITIONAL_FLAGS_LIST=["--max-age 10s", "--min-age 1s"],
+            RCLONE_FILTER_FLAGS_LIST=["--max-age 10s", "--min-age 1s"],
+        )
