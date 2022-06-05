@@ -12,7 +12,7 @@ class Configuration:
 
     BACKUP_DESTINATION: str
 
-    BACKUP_INTERVAL: int = 900  # seconds: 15 minutes
+    BACKUP_INTERVAL: int | None = 900  # seconds: 15 minutes
 
     NO_TRAVERSE_MAX_AGE: int = 86400  # seconds: 24 hours
 
@@ -31,6 +31,12 @@ class Configuration:
     EXCEPTION_NOTIFY_COMMAND: str | None = ""
 
     def __post_init__(self):
+        if self.BACKUP_INTERVAL is not None and self.BACKUP_INTERVAL < 1:
+            raise RuntimeError(
+                f"InvalidSetting: BACKUP_INTERVAL can't be lower than 1.\n"
+                f"BACKUP_INTERVAL is set to {self.BACKUP_INTERVAL}."
+            )
+
         self.RCLONE_ADDITIONAL_FLAGS_STR = " ".join(self.RCLONE_ADDITIONAL_FLAGS_LIST)
 
         self.RCLONE_FILTER_FLAGS_STR = " ".join(self.RCLONE_FILTER_FLAGS_LIST)

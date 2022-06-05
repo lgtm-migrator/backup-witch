@@ -23,9 +23,16 @@ from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_s
 class BackupService(Service):
     def __init__(self, application_state: ApplicationState, config: Configuration):
         self._state = ScopedState(application_state, "backup-service:")
-        super().__init__(
-            IntervalRunner(config.BACKUP_INTERVAL, self._state)
-        )  # todo oneshot runner
+
+        async def oneshot_runner(operation):
+            operation()
+
+        _runner = (
+            oneshot_runner
+            if config.BACKUP_INTERVAL is None
+            else IntervalRunner(config.BACKUP_INTERVAL, self._state)
+        )
+        super().__init__(_runner)
         self._backup_source = config.BACKUP_SOURCE
         self._destination_latest = config.BACKUP_DESTINATION_LATEST
         self._destination_previous = config.BACKUP_DESTINATION_PREVIOUS
