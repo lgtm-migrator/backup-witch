@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable
 
+from src.utils.bash_utils import BashScriptErrorHandler
+
 UNIX_HOME_FOLDER = Path("~/").expanduser().__str__()
 
 
@@ -30,6 +32,12 @@ class Configuration:
     IGNORE_PARTIALLY_WRITTEN_FILES_UPLOAD_ERRORS: bool = True
 
     EXCEPTION_NOTIFY_COMMAND_COMPOSER: Callable[[Configuration], str] | None = None
+
+    RCLONE_COPY_FILES_ERROR_HANDLER: BashScriptErrorHandler | None = None
+
+    RCLONE_MATCH_DESTINATION_TO_SOURCE_ERROR_HANDLER: BashScriptErrorHandler | None = (
+        None
+    )
 
     def __post_init__(self):
         if self.BACKUP_INTERVAL is not None and self.BACKUP_INTERVAL < 1:

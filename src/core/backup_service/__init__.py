@@ -55,6 +55,13 @@ class BackupService(Service):
             self._checkers_for_ignored_errors.append(
                 lambda l: "source file is being updated" in l
             )
+        self._rclone_copy_files_error_handler = (
+            config.RCLONE_COPY_FILES_ERROR_HANDLER
+            or self._default_rclone_copy_files_error_handler
+        )
+        self._rclone_match_destination_to_source_error_handler = (
+            config.RCLONE_MATCH_DESTINATION_TO_SOURCE_ERROR_HANDLER or None
+        )
 
     def _body(self):
         if self._apps_list_output_file:
@@ -114,10 +121,13 @@ class BackupService(Service):
                 self._rclone_match_log_file,
                 self._rclone_filter_flags,
                 rclone_additional_flags,
-            )
+            ),
+            error_handler=self._rclone_match_destination_to_source_error_handler,
         )
 
-    def _rclone_copy_files_error_handler(self, err: subprocess.CalledProcessError):
+    def _default_rclone_copy_files_error_handler(
+        self, err: subprocess.CalledProcessError
+    ):
         if not self._checkers_for_ignored_errors:
             raise err
         try:
