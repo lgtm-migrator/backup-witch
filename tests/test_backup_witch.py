@@ -65,7 +65,6 @@ def utils(tmp_path):
 async def test_normal_with_permission_error_ignore(utils):
     config = utils.config(
         RCLONE_FILTER_FLAGS_LIST=["--copy-links"],
-        IGNORE_PERMISSION_DENIED_ERRORS_ON_SOURCE=True,
     )
     paths = utils.paths(config)
     utils.bootstrap_env(paths)
@@ -166,3 +165,38 @@ async def test_unparseable_rclone_error_handling(utils):
     utils.bootstrap_env(paths)
     with pytest.raises(subprocess.CalledProcessError):
         await main(config)
+
+
+async def test_oneshot_runner(utils):
+    config = utils.config(
+        RCLONE_FILTER_FLAGS_LIST=["--copy-links"],
+        BACKUP_INTERVAL=None,
+    )
+    paths = utils.paths(config)
+    utils.bootstrap_env(paths)
+    symlink_to_root = paths.backup_source / "root"
+    symlink_to_root.symlink_to("/root")
+    file_on_backup_source_name = "first-file.txt"
+    file_on_backup_source = paths.backup_source / file_on_backup_source_name
+    file_on_backup_source.touch()
+    file_on_backup_source.write_text("first-file")
+    await asyncio.wait_for(main(config), 1)
+    file_on_backup_destination_latest = (
+        paths.backup_destination_latest / file_on_backup_source_name
+    )
+    assert file_on_backup_destination_latest.exists()
+    assert (
+        file_on_backup_destination_latest.read_text()
+        == file_on_backup_source.read_text()
+    )
+
+
+def test_backup_interval_invalid_error(utils):
+    with pytest.raises(RuntimeError):
+        utils.config(
+            BACKUP_INTERVAL=-1,
+        )
+    with pytest.raises(RuntimeError):
+        utils.config(
+            BACKUP_INTERVAL=0,
+        )
