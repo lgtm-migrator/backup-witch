@@ -12,9 +12,6 @@ from src.lib.application_state import ApplicationState
 from src.lib.interval_runner import IntervalRunner
 from src.lib.scoped_state import ScopedState
 from src.lib.service import Service
-from src.plugins.pre_backup_hooks.save_list_of_installed_apps import (
-    SaveListOfInstalledAppsScript,
-)
 from src.settings import Configuration
 from src.utils.bash_utils import run_bash_script
 from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_stamp
@@ -41,7 +38,6 @@ class BackupService(Service):
         self._rclone_match_log_file = config.RCLONE_MATCH_LOG_FILE
         self._no_traverse_max_age = config.NO_TRAVERSE_MAX_AGE
         self._rclone_additional_flags = config.RCLONE_ADDITIONAL_FLAGS_STR
-        self._apps_list_output_file = config.APPS_LIST_FILE
         self._ignore_permission_denied_errors_on_source = (
             config.IGNORE_PERMISSION_DENIED_ERRORS_ON_SOURCE
         )
@@ -62,10 +58,12 @@ class BackupService(Service):
         self._rclone_match_destination_to_source_error_handler = (
             config.RCLONE_MATCH_DESTINATION_TO_SOURCE_ERROR_HANDLER or None
         )
+        self._pre_backup_hooks = config.PRE_BACKUP_HOOKS
+        self._post_backup_hooks = config.POST_BACKUP_HOOKS
 
     def _body(self):
-        if self._apps_list_output_file:
-            run_bash_script(SaveListOfInstalledAppsScript(self._apps_list_output_file))
+        for hook in self._pre_backup_hooks:
+            hook()
         seconds_passed_from_last_backup_run_start = (
             seconds_passed_from_time_stamp_till_now(
                 self._state.get("last_backup_run_start_time_stamp", "")
@@ -86,6 +84,8 @@ class BackupService(Service):
         self._state.set(
             key="last_backup_run_start_time_stamp", value=backup_run_start_time_stamp
         )
+        for hook in self._post_backup_hooks:
+            hook()
 
     def _copy_files_to_destination(
         self,

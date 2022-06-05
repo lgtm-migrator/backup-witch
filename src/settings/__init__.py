@@ -19,13 +19,11 @@ class Configuration:
 
     NO_TRAVERSE_MAX_AGE: int = 86400  # seconds: 24 hours
 
-    RCLONE_FILTER_FLAGS_LIST: list = field(default_factory=list)
+    RCLONE_FILTER_FLAGS_LIST: list[str] = field(default_factory=list)
 
-    RCLONE_ADDITIONAL_FLAGS_LIST: list = field(default_factory=list)
+    RCLONE_ADDITIONAL_FLAGS_LIST: list[str] = field(default_factory=list)
 
     BACKUP_WITCH_DATA_FOLDER: str = UNIX_HOME_FOLDER + "/.backup-witch"
-
-    APPS_LIST_FILE: str | None = UNIX_HOME_FOLDER + "/.list-of-installed-apps.txt"
 
     IGNORE_PERMISSION_DENIED_ERRORS_ON_SOURCE: bool = True
 
@@ -38,6 +36,10 @@ class Configuration:
     RCLONE_MATCH_DESTINATION_TO_SOURCE_ERROR_HANDLER: BashScriptErrorHandler | None = (
         None
     )
+
+    PRE_BACKUP_HOOKS: list[Callable[[], None]] = field(default_factory=list)
+
+    POST_BACKUP_HOOKS: list[Callable[[], None]] = field(default_factory=list)
 
     def __post_init__(self):
         if self.BACKUP_INTERVAL is not None and self.BACKUP_INTERVAL < 1:

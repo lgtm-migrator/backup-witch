@@ -1,7 +1,7 @@
-from src.utils.bash_utils import BashScript
+from src.utils.bash_utils import BashScript, run_bash_script
 
 
-class SaveListOfInstalledAppsScript(BashScript):
+class SaveListOfInstalledAppsHook(BashScript):
     def __init__(self, output_file: str):
         code = f"""
         list=$'---flatpak\n'
@@ -16,3 +16,6 @@ class SaveListOfInstalledAppsScript(BashScript):
         fi
         """
         super().__init__("save-list-of-installed-apps", code)
+
+    def __call__(self):
+        run_bash_script(self)

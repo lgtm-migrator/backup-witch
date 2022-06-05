@@ -8,6 +8,9 @@ from typing import Callable
 import pytest
 
 from src.main import main
+from src.plugins.pre_backup_hooks.save_list_of_installed_apps import (
+    SaveListOfInstalledAppsHook,
+)
 from src.settings import Configuration
 
 
@@ -230,3 +233,26 @@ def test_prohibited_rclone_flags_error(utils):
             RCLONE_ADDITIONAL_FLAGS_LIST=["--max-age 10s", "--min-age 1s"],
             RCLONE_FILTER_FLAGS_LIST=["--max-age 10s", "--min-age 1s"],
         )
+
+
+async def test_pre_backup_hooks_run(utils):
+    config = utils.config()
+    paths = utils.paths(config)
+    utils.bootstrap_env(paths)
+    apps_list_file = paths.backup_source / "list-of-installed-apps.txt"
+    config.PRE_BACKUP_HOOKS = [SaveListOfInstalledAppsHook(apps_list_file.__str__())]
+    # we need to remake config object, as __post__init__ in dataclass is run only after __init__
+    config = utils.config(**asdict(config))
+    with pytest.raises(asyncio.TimeoutError):
+        await asyncio.wait_for(main(config), config.BACKUP_INTERVAL)
+    assert apps_list_file.exists()
+    assert apps_list_file.read_text()
+    apps_list_file.unlink()
+    config.PRE_BACKUP_HOOKS = []
+    config.POST_BACKUP_HOOKS = [SaveListOfInstalledAppsHook(apps_list_file.__str__())]
+    config = utils.config(**asdict(config))  # remake for post_backup_hooks
+    with pytest.raises(asyncio.TimeoutError):
+        # give more time to run, so that post backup hook could run
+        await asyncio.wait_for(main(config), config.BACKUP_INTERVAL * 2)
+    assert apps_list_file.exists()
+    assert apps_list_file.read_text()
