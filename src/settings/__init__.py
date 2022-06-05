@@ -21,7 +21,7 @@ class Configuration:
 
     RCLONE_ADDITIONAL_FLAGS_LIST: list = field(default_factory=list)
 
-    BACKUP_WITCH_DATA_FOLDER: str = UNIX_HOME_FOLDER + "/.cache/backup-witch"
+    BACKUP_WITCH_DATA_FOLDER: str = UNIX_HOME_FOLDER + "/.backup-witch"
 
     APPS_LIST_FILE: str | None = UNIX_HOME_FOLDER + "/.list-of-installed-apps.txt"
 
