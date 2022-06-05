@@ -38,7 +38,7 @@ def utils(tmp_path):
         BACKUP_DESTINATION=backup_destination.__str__(),
         BACKUP_INTERVAL=1,  # seconds
         BACKUP_WITCH_DATA_FOLDER=backup_witch_data_folder.__str__(),
-        EXCEPTION_NOTIFY_COMMAND="exit 0",
+        EXCEPTION_NOTIFY_COMMAND_COMPOSER=None,
         RCLONE_ADDITIONAL_FLAGS_LIST=pytest.testenv.RCLONE_FLAGS_LIST,
     )
 
@@ -145,6 +145,28 @@ async def test_with_no_errors_ignore(utils):
     symlink_to_root.symlink_to("/root")
     with pytest.raises(subprocess.CalledProcessError):
         await main(config)
+
+
+async def test_exception_notify_command_composer(utils):
+    config = utils.config(
+        RCLONE_FILTER_FLAGS_LIST=["--copy-links"],
+        IGNORE_PERMISSION_DENIED_ERRORS_ON_SOURCE=False,
+    )
+    paths = utils.paths(config)
+    utils.bootstrap_env(paths)
+    output_file_name = "out.txt"
+    output_file_path = paths.backup_witch_data_folder / output_file_name
+    config.EXCEPTION_NOTIFY_COMMAND_COMPOSER = (
+        lambda c: f'echo -n "{c.BACKUP_SOURCE}" > {output_file_path}'
+    )
+    # we need to remake config object, as __post__init__ in dataclass is run only after __init__
+    config = utils.config(**asdict(config))
+    symlink_to_root = paths.backup_source / "root"
+    symlink_to_root.symlink_to("/root")
+    with pytest.raises(subprocess.CalledProcessError):
+        await main(config)
+    assert output_file_path.exists()
+    assert output_file_path.read_text() == config.BACKUP_SOURCE
 
 
 async def test_invalid_argument_error(utils):
