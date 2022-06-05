@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Callable
 
 UNIX_HOME_FOLDER = Path("~/").expanduser().__str__()
 
@@ -28,7 +29,7 @@ class Configuration:
 
     IGNORE_PARTIALLY_WRITTEN_FILES_UPLOAD_ERRORS: bool = True
 
-    EXCEPTION_NOTIFY_COMMAND: str | None = ""
+    EXCEPTION_NOTIFY_COMMAND_COMPOSER: Callable[[Configuration], str] | None = None
 
     def __post_init__(self):
         if self.BACKUP_INTERVAL is not None and self.BACKUP_INTERVAL < 1:
@@ -57,8 +58,8 @@ class Configuration:
 
         self.STATE_FILE: str = self.BACKUP_WITCH_DATA_FOLDER + "/state.json"
 
-        if self.EXCEPTION_NOTIFY_COMMAND == "":  # pragma: no cover
-            self.EXCEPTION_NOTIFY_COMMAND = (
-                f'notify-send "backup_witch" "Exception Occurred\n'
-                f'Check log -> {self.PYTHON_LOG_FILE}" -u critical '
-            )
+        self.EXCEPTION_NOTIFY_COMMAND = (
+            None
+            if self.EXCEPTION_NOTIFY_COMMAND_COMPOSER is None
+            else self.EXCEPTION_NOTIFY_COMMAND_COMPOSER(self)
+        )

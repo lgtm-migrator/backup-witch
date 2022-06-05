@@ -1,3 +1,6 @@
+from src.plugins.exception_notify_command_composers.notify_send_exception_notify_command_composer import (
+    notify_send_exception_notify_command_composer,
+)
 from src.settings import UNIX_HOME_FOLDER, Configuration
 
 CONFIG = Configuration(
@@ -15,4 +18,5 @@ CONFIG = Configuration(
         "--log-level INFO",
         "--stats-file-name-length 0",
     ],
+    EXCEPTION_NOTIFY_COMMAND_COMPOSER=notify_send_exception_notify_command_composer,
 )
