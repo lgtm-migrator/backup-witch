@@ -42,6 +42,18 @@ class Configuration:
 
         self.RCLONE_FILTER_FLAGS_STR = " ".join(self.RCLONE_FILTER_FLAGS_LIST)
 
+        if any(
+            [
+                "--max-age" in self.RCLONE_ADDITIONAL_FLAGS_STR,
+                "--min-age" in self.RCLONE_ADDITIONAL_FLAGS_STR,
+                "--max-age" in self.RCLONE_FILTER_FLAGS_STR,
+                "--min-age" in self.RCLONE_FILTER_FLAGS_STR,
+            ]
+        ):
+            raise RuntimeError(
+                "rclone --max-age or --min-age filters should not be used!"
+            )
+
         self.BACKUP_DESTINATION_LATEST: str = self.BACKUP_DESTINATION + "/latest"
 
         self.BACKUP_DESTINATION_PREVIOUS: str = self.BACKUP_DESTINATION + "/previous"
