@@ -3,9 +3,10 @@ from __future__ import annotations
 from typing import Any
 
 from src.lib.application_state_provider import ApplicationStateProvider
+from src.lib.state import State
 
 
-class ApplicationState:
+class ApplicationState(State):
     def __init__(self, provider: ApplicationStateProvider):
         self._provider = provider
         self._data = provider.load_state({})

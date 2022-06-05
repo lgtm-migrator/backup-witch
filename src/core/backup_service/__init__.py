@@ -4,15 +4,17 @@ import subprocess
 from pathlib import Path
 from typing import Callable
 
-from src.plugins.pre_backup_hooks.save_list_of_installed_apps import (
-    SaveListOfInstalledAppsScript,
-)
 from src.core.rclone_copy_files import RcloneCopyFilesToDestinationScript
 from src.core.rclone_match_destination_to_source import (
     RcloneMatchDestinationToSourceScript,
 )
 from src.lib.application_state import ApplicationState
+from src.lib.interval_runner import IntervalRunner
+from src.lib.scoped_state import ScopedState
 from src.lib.service import Service
+from src.plugins.pre_backup_hooks.save_list_of_installed_apps import (
+    SaveListOfInstalledAppsScript,
+)
 from src.settings import Configuration
 from src.utils.bash_utils import run_bash_script
 from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_stamp
@@ -20,7 +22,10 @@ from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_s
 
 class BackupService(Service):
     def __init__(self, application_state: ApplicationState, config: Configuration):
-        super().__init__(config.BACKUP_INTERVAL, application_state, "backup-service:")
+        self._state = ScopedState(application_state, "backup-service:")
+        super().__init__(
+            IntervalRunner(config.BACKUP_INTERVAL, self._state)
+        )  # todo oneshot runner
         self._backup_source = config.BACKUP_SOURCE
         self._destination_latest = config.BACKUP_DESTINATION_LATEST
         self._destination_previous = config.BACKUP_DESTINATION_PREVIOUS
@@ -44,7 +49,7 @@ class BackupService(Service):
                 lambda l: "source file is being updated" in l
             )
 
-    async def _body(self):
+    def _body(self):
         if self._apps_list_output_file:
             run_bash_script(SaveListOfInstalledAppsScript(self._apps_list_output_file))
         seconds_passed_from_last_backup_run_start = (
