@@ -27,11 +27,9 @@ Made with **python** and **bash**.
 
 **backup-witch** operates with backup source, i.e. source of backup, and backup destination.
 
-On backup destination **backup-witch** creates two folders: latest and previous. _latest_ - is the backup source synced
-to the backup destination (the latest snapshot of data). _previous_ - is the folder, where previous version of files, as
-well as deleted files, reside.
+On backup destination **backup-witch** creates two folders: latest and previous. 
 
-**backup-witch** also generates a txt file, containing a list of installed apps (apt, snap, flatpak), which can be used during restore process to install all apps, that were present on system. This feature is optional.
+_latest_ - is the backup source synced to the backup destination (the latest snapshot of data). _previous_ - is the folder, where previous version of files, as well as deleted files, reside.
 
 ## Dependencies
 
