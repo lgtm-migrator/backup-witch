@@ -96,21 +96,21 @@ All settings are processed and have their defaults defined in _src/settings.\_\_
 
 - BACKUP_SOURCE - source argument for rclone
 - BACKUP_DESTINATION - backup destination, where _latest_ and _previous_ folders to be created
-- BACKUP_INTERVAL - backup interval, specified in **seconds**, value should be >= **1**; alternatively set this to **None**, to run **backup-witch** in _oneshot mode*_
+- BACKUP_INTERVAL - backup interval, specified in seconds, value should be >= 1; alternatively set this to None, to run **backup-witch** in _oneshot mode*_
     > **oneshot** mode makes backup-witch run once and exit, use this if you don't want to use built-in interval runner, and instead want to use an external run scheduler like **cron**, **anacron** or **fcron**
 - NO_TRAVERSE_MAX_AGE - specified in seconds
   > **backup-witch** uses **--no-traverse** rclone flag to speedup data transfer; on each run **backup-witch** computes how much time have passed since the last backup, this setting specifies the maximum allowed amount of time passed with which to use **--no-traverse** flag, i.e. if since the last **backup-witch** run have passed more time than NO_TRAVERSE_MAX_AGE, than **--no-traverse** flag will not be used with **rclone copy**
 - RCLONE_FILTER_FLAGS_LIST - list of rclone filter flags, e.g. "--include", "--exclude", "--filter", "--links" and so on
   > You can supply here **--filter-from** flag. An example rclone filter file for linux home directory is in _docs_ folder
 - RCLONE_ADDITIONAL_FLAGS_LIST - list of additional rclone flags like "--fast-list", "--drive-chunk-size", "--transfers" and such.
-- BACKUP_WITCH_DATA_FOLDER: str - path to **backup-witch** data folder, by default this is set to _~/.backup-witch_
+- BACKUP_WITCH_DATA_FOLDER - path to **backup-witch** data folder, by default this is set to _~/.backup-witch_
 - IGNORE_PERMISSION_DENIED_ERRORS_ON_SOURCE - determines whether to ignore permission denied errors on backup source when copying files from backup source to backup destination.
-- IGNORE_PARTIALLY_WRITTEN_FILES_UPLOAD_ERRORS: bool - determines whether to ignore errors caused by uploading files, which are being written to
+- IGNORE_PARTIALLY_WRITTEN_FILES_UPLOAD_ERRORS - determines whether to ignore errors caused by uploading files, which are being written to
 - EXCEPTION_NOTIFY_COMMAND_COMPOSER - an exception notify command composer (function or callable object)
   > if you provide composer, **backup-witch** will call it to create a shell command, which will be run before termination, if error occurs. It should be command which will notify about error in **backup-witch**. Take a look at **notify_send_exception_notify_command_composer** in [Plugins](#plugins) section, for an example composer, which uses **notify-send** to send a notification.
 - RCLONE_COPY_FILES_ERROR_HANDLER - custom handler for "rclone copy files" operation*; provide this if you need to handle rclone errors not handled by **backup-witch**
 - RCLONE_MATCH_DESTINATION_TO_SOURCE_ERROR_HANDLER - same as previous, but for "rclone match destination to source" operation*
-  > "rclone copy files" and "rclone match destination to source" operations are defined in _src/core_ directory.
+  > "rclone copy files" and "rclone match destination to source" operations are defined in _src/core_
 - PRE_BACKUP_HOOKS - a list of pre-backup hooks; hooks are callables which perform operation; pre-backup hooks are run before backup
 - POST_BACKUP_HOOKS - same as previous, but run after backup
 
