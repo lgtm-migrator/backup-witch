@@ -12,6 +12,11 @@ from src.settings import Configuration
 async def main(config: Configuration):
     try:
         Path(config.BACKUP_WITCH_DATA_FOLDER).mkdir(parents=True, exist_ok=True)
+        logging.basicConfig(
+            filename=config.PYTHON_LOG_FILE,
+            level=logging.WARNING,
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        )
         application_state = ApplicationState(
             JSONApplicationStateProvider(config.STATE_FILE)
         )
@@ -41,9 +46,4 @@ if __name__ == "__main__":  # pragma: no cover
         raise RuntimeError(
             'No config found. Check "How to run" section of readme'
         ) from err
-    logging.basicConfig(
-        filename=CONFIG.PYTHON_LOG_FILE,
-        level=logging.WARNING,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    )
     asyncio.run(main(CONFIG))
