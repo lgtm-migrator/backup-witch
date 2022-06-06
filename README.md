@@ -16,7 +16,7 @@
   </a>
   <a href="https://pycqa.github.io/isort/">
     <img alt="Imports: isort" src="https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336">
-  </a>
+  </a> 
 </p>
 
 **backup-witch** is an ultimate tool for performing continuous automated backup and synchronization of data with **rclone**.
