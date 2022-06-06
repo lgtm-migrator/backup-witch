@@ -8,5 +8,6 @@ __pycache__/
 .coverage
 coverage.xml
 
-# user config file
+# user config
 /src/config.py
+/src/config/

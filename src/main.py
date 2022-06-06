@@ -3,9 +3,9 @@ import logging
 import subprocess
 from pathlib import Path
 
-from src.core.application_state import ApplicationState
-from src.core.application_state_provider_json import ApplicationStateProviderJSON
 from src.core.backup_service import BackupService
+from src.lib.application_state import ApplicationState
+from src.lib.json_application_state_provider import JSONApplicationStateProvider
 from src.settings import Configuration
 
 
@@ -13,7 +13,7 @@ async def main(config: Configuration):
     try:
         Path(config.BACKUP_WITCH_DATA_FOLDER).mkdir(parents=True, exist_ok=True)
         application_state = ApplicationState(
-            ApplicationStateProviderJSON(config.STATE_FILE)
+            JSONApplicationStateProvider(config.STATE_FILE)
         )
         backup_service = BackupService(
             application_state=application_state, config=config

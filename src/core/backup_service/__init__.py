@@ -4,13 +4,14 @@ import subprocess
 from pathlib import Path
 from typing import Callable
 
-from src.bash_scripts.rclone_copy_files import RcloneCopyFilesToDestinationScript
-from src.bash_scripts.rclone_match_destination_to_source import (
+from src.core.rclone_copy_files import RcloneCopyFilesToDestinationScript
+from src.core.rclone_match_destination_to_source import (
     RcloneMatchDestinationToSourceScript,
 )
-from src.bash_scripts.save_list_of_installed_apps import SaveListOfInstalledAppsScript
-from src.core.application_state import ApplicationState
-from src.core.service import Service
+from src.lib.application_state import ApplicationState
+from src.lib.interval_runner import IntervalRunner
+from src.lib.scoped_state import ScopedState
+from src.lib.service import Service
 from src.settings import Configuration
 from src.utils.bash_utils import run_bash_script
 from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_stamp
@@ -18,7 +19,17 @@ from src.utils.time_utils import seconds_passed_from_time_stamp_till_now, time_s
 
 class BackupService(Service):
     def __init__(self, application_state: ApplicationState, config: Configuration):
-        super().__init__(config.BACKUP_INTERVAL, application_state, "backup-service:")
+        self._state = ScopedState(application_state, "backup-service:")
+
+        async def oneshot_runner(operation):
+            operation()
+
+        _runner = (
+            oneshot_runner
+            if config.BACKUP_INTERVAL is None
+            else IntervalRunner(config.BACKUP_INTERVAL, self._state)
+        )
+        super().__init__(_runner)
         self._backup_source = config.BACKUP_SOURCE
         self._destination_latest = config.BACKUP_DESTINATION_LATEST
         self._destination_previous = config.BACKUP_DESTINATION_PREVIOUS
@@ -27,7 +38,6 @@ class BackupService(Service):
         self._rclone_match_log_file = config.RCLONE_MATCH_LOG_FILE
         self._no_traverse_max_age = config.NO_TRAVERSE_MAX_AGE
         self._rclone_additional_flags = config.RCLONE_ADDITIONAL_FLAGS_STR
-        self._apps_list_output_file = config.APPS_LIST_FILE
         self._ignore_permission_denied_errors_on_source = (
             config.IGNORE_PERMISSION_DENIED_ERRORS_ON_SOURCE
         )
@@ -41,10 +51,19 @@ class BackupService(Service):
             self._checkers_for_ignored_errors.append(
                 lambda l: "source file is being updated" in l
             )
+        self._rclone_copy_files_error_handler = (
+            config.RCLONE_COPY_FILES_ERROR_HANDLER
+            or self._default_rclone_copy_files_error_handler
+        )
+        self._rclone_match_destination_to_source_error_handler = (
+            config.RCLONE_MATCH_DESTINATION_TO_SOURCE_ERROR_HANDLER or None
+        )
+        self._pre_backup_hooks = config.PRE_BACKUP_HOOKS
+        self._post_backup_hooks = config.POST_BACKUP_HOOKS
 
-    async def _body(self):
-        if self._apps_list_output_file:
-            run_bash_script(SaveListOfInstalledAppsScript(self._apps_list_output_file))
+    def _body(self):
+        for hook in self._pre_backup_hooks:
+            hook()
         seconds_passed_from_last_backup_run_start = (
             seconds_passed_from_time_stamp_till_now(
                 self._state.get("last_backup_run_start_time_stamp", "")
@@ -65,6 +84,8 @@ class BackupService(Service):
         self._state.set(
             key="last_backup_run_start_time_stamp", value=backup_run_start_time_stamp
         )
+        for hook in self._post_backup_hooks:
+            hook()
 
     def _copy_files_to_destination(
         self,
@@ -100,10 +121,13 @@ class BackupService(Service):
                 self._rclone_match_log_file,
                 self._rclone_filter_flags,
                 rclone_additional_flags,
-            )
+            ),
+            error_handler=self._rclone_match_destination_to_source_error_handler,
         )
 
-    def _rclone_copy_files_error_handler(self, err: subprocess.CalledProcessError):
+    def _default_rclone_copy_files_error_handler(
+        self, err: subprocess.CalledProcessError
+    ):
         if not self._checkers_for_ignored_errors:
             raise err
         try:

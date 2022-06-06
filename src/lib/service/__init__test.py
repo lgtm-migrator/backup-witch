@@ -2,9 +2,11 @@ import asyncio
 
 import pytest
 
-from src.core.application_state import ApplicationState
-from src.core.application_state_provider_json import ApplicationStateProviderJSON
-from src.core.service import Service
+from src.lib.application_state import ApplicationState
+from src.lib.interval_runner import IntervalRunner
+from src.lib.json_application_state_provider import JSONApplicationStateProvider
+from src.lib.scoped_state import ScopedState
+from src.lib.service import Service
 
 
 class CountService(Service):
@@ -15,11 +17,15 @@ class CountService(Service):
         initial_value: int,
         step: int,
     ):
-        super().__init__(run_interval, application_state, "count-service:")
+        super().__init__(
+            IntervalRunner(
+                run_interval, ScopedState(application_state, "count-service:")
+            )
+        )
         self._value = initial_value
         self._step = step
 
-    async def _body(self):
+    def _body(self):
         self._value += self._step
 
     def get_value(self) -> int:
@@ -29,7 +35,7 @@ class CountService(Service):
 async def test(tmp_path):
     state_save_file_path = tmp_path / "state.json"
     application_state = ApplicationState(
-        ApplicationStateProviderJSON(state_save_file_path.__str__())
+        JSONApplicationStateProvider(state_save_file_path.__str__())
     )
     run_interval = 2  # seconds
     initial_counter_value = 0
