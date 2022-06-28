@@ -23,6 +23,16 @@
 
 Made with **python** and **bash**.
 
+## Features
+
+- uses [rclone](https://rclone.org/)
+- compatible with any [cloud storage provider](https://rclone.org/overview/#features) supported by rclone
+- [top-up sync strategy](https://forum.rclone.org/t/strageties-for-speeding-up-rclone-sync-times/20588/10)
+- pre-backup and post-backup hooks
+- interval run scheduling or run scheduling with tool of your choice (e.g. cron, fcron)
+- full control over rclone configuration ([flags](https://rclone.org/flags/), [filters](https://rclone.org/filtering/))
+- rclone _[--backup-dir](https://rclone.org/docs/#backup-dir-dir)_ as backup mechanism
+
 ## How it works
 
 **backup-witch** operates with backup source, i.e. source of backup, and backup destination.
